@@ -1,0 +1,38 @@
+:root{
+    /* colour definitions */
+    --clr-primary-200: rgb(90, 95, 115);
+    --clr-primary-300: rgb(68, 72, 87);
+    --clr-primary-400: rgb(44, 48, 58);
+    --clr-primary-500: rgb(30, 31, 38);
+    --clr-primary-700: rgb(19, 20, 23);
+
+    --clr-secondary-400: rgb(112, 204, 124);
+    --clr-secondary-700: rgb(36, 140, 70);
+}
+
+.bg-primary-200{
+    background-color: var(--clr-primary-200);
+}
+.bg-primary-300{
+    background-color: var(--clr-primary-300);
+}
+.bg-primary-400{
+    background-color: var(--clr-primary-400);
+}
+.bg-primary-500{
+    background-color: var(--clr-primary-500);
+}
+.bg-primary-700{
+    background-color: var(--clr-primary-700);
+}
+
+.btn{
+    color: var(--clr-secondary-400);
+    border-color: var(--clr-secondary-400);
+
+    &:hover{
+        color: var(--clr-secondary-700);
+        background-color: var(--clr-secondary-400);
+        border-color: var(--clr-secondary-700);
+    }
+}

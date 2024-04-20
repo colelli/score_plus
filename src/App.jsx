@@ -1,34 +1,20 @@
-import { useState } from 'react'
-import './App.css'
+import './css/scoreplus.scss'
 
 function App() {
 
   return(
-    <div className='container'>
-      <div className='navbar'>
-        <div className='logo-container'>
-
+    <div>
+      <nav className='navbar bg-primary-500'>
+        <div className='container-fluid'>
+          <a className='navbar-brand'>
+            <img className='logo' src='src/assets/score_plus_logo.svg'></img>
+          </a>
+          <form className='d-flex' role='search'>
+            <input className='form-control me-2' type='search' placeholder='Search...' aria-label='Search'/>
+            <button className='btn btn-outlinesuccess' type='submit'>Search</button>
+          </form>
         </div>
-        <div className='login-container'>
-          <img src='src/assets/user.png' className='user-login'></img>
-        </div>
-      </div>
-      <div className='page-container'>
-        <div className='sidebar'>
-          <div className='sidebar-item button'>
-            <img className='sidebar-item-img'></img>
-            <div className='sidebar-item-title'>Prova testo</div>
-          </div>
-          <div className='sidebar-item button'>
-            <img className='sidebar-item-img'></img>
-            <div className='sidebar-item-title'>Prova testo 2</div>
-          </div>
-          <div className='sidebar-item button'>
-            <img className='sidebar-item-img'></img>
-            <div className='sidebar-item-title'>Prova testo</div>
-          </div>
-        </div>
-      </div>
+      </nav>
     </div>
   )
 
