@@ -25,14 +25,31 @@
 .bg-primary-700{
     background-color: var(--clr-primary-700);
 }
+.text-light{
+    color: var(--clr-primary-200)!important;
+}
 
 .btn{
     color: var(--clr-secondary-400);
+    font-weight: bold;
     border-color: var(--clr-secondary-400);
 
-    &:hover{
+    &:hover, 
+    &:focus-visible{
         color: var(--clr-secondary-700);
         background-color: var(--clr-secondary-400);
         border-color: var(--clr-secondary-700);
+    }
+}
+
+.btn[datatype=inverted]{
+    color: var(--clr-secondary-700);
+    background-color: var(--clr-secondary-400);
+    font-weight: bold;
+
+    &:hover, 
+    &:focus-visible{
+        color: var(--clr-secondary-400);
+        background-color: var(--clr-secondary-700);
     }
 }
