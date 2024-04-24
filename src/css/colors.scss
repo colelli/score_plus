@@ -6,10 +6,12 @@
     --clr-primary-500: rgb(30, 31, 38);
     --clr-primary-700: rgb(19, 20, 23);
 
-    --clr-secondary-400: rgb(112, 204, 124);
-    --clr-secondary-700: rgb(36, 140, 70);
+    --clr-secondary-100: rgb(180, 208, 232);
+    --clr-secondary-400: rgb(55, 174, 254);
+    --clr-secondary-700: rgb(11, 105, 255);
 }
 
+/* Primary bg-colors */
 .bg-primary-200{
     background-color: var(--clr-primary-200);
 }
@@ -26,6 +28,7 @@
     background-color: var(--clr-primary-700);
 }
 
+/* Secondary bg-colors */
 .bg-secondary-400{
     background-color: var(--clr-secondary-400);
 }
@@ -33,10 +36,38 @@
     background-color: var(--clr-secondary-700);
 }
 
-.text-light{
+/* Primary text-colors */
+.text-primary-200{
     color: var(--clr-primary-200)!important;
 }
+.text-primary-300{
+    color: var(--clr-primary-300)!important;
+}
+.text-primary-400{
+    color: var(--clr-primary-400)!important;
+}
+.text-primary-500{
+    color: var(--clr-primary-500)!important;
+}
+.text-primary-600{
+    color: var(--clr-primary-600)!important;
+}
+.text-primary-700{
+    color: var(--clr-primary-700)!important;
+}
 
+/* Secondary text-colors */
+.text-secondary-100{
+    color: var(--clr-secondary-100)!important;
+}
+.text-secondary-400{
+    color: var(--clr-secondary-400)!important;
+}
+.text-secondary-700{
+    color: var(--clr-secondary-700)!important;
+}
+
+/* Other styles */
 .btn{
     color: var(--clr-primary-700) !important;
     background-color: var(--clr-secondary-400);
@@ -54,7 +85,8 @@
     
     &:hover,
     &:focus-visible{
-        background-color: var(--clr-secondary-700);
+        color: var(--clr-primary-700) !important;
+        background-color: var(--clr-secondary-100);
     }
 }
 

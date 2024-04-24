@@ -32,6 +32,12 @@ a{
   color: white !important;
 }
 
+#user-menu {
+  a{
+    color: black !important;
+  }
+}
+
 .logo {
   height: 25px;
   filter: invert(100%) sepia(0%) saturate(7500%) hue-rotate(296deg) brightness(100%) contrast(102%);
@@ -39,13 +45,33 @@ a{
 
 .logo:hover,
 .logo:focus-visible{
-  filter: invert(70%) sepia(27%) saturate(647%) hue-rotate(77deg) brightness(97%) contrast(92%);
+  /*filter: invert(70%) sepia(27%) saturate(647%) hue-rotate(77deg) brightness(97%) contrast(92%);*/
+  filter: invert(66%) sepia(44%) saturate(5914%) hue-rotate(184deg) brightness(108%) contrast(99%);
   cursor: pointer;
 }
 
-.mt-10 {
-  margin-top: (1rem * 5) !important;
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
 }
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: rgba(0,0,0,0.1);
+  border-radius: 4px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: var(--clr-secondary-400);
+  border-radius: 4px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: var(--clr-secondary-100);
+}
+
 
 .input-dnd {
   .form-control-file {
