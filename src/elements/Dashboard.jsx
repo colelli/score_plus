@@ -1,4 +1,5 @@
 import { ExclamationTriangleIcon } from "@heroicons/react/16/solid"
+import { FaceFrownIcon } from "@heroicons/react/24/outline"
 import { useEffect, useState } from "react"
 
 function classNames(...classes) {
@@ -9,7 +10,8 @@ const description = "Apache Log4j2 2.0-beta9 through 2.15.0 (excluding security 
 
 export default function Dashboard() {
 
-    const [result, SetResult] = useState({ critical_cve_number: 10, score: 10.0, cve_list: [1]})
+    const temp = { critical_cve_number: 10, score: 10.0, cve_list: [1]}
+    const [result, SetResult] = useState({})
 
     useEffect
 
@@ -92,8 +94,13 @@ export default function Dashboard() {
 
             {Object.keys(result).length == 0 &&
                 <>
-                    <div>
-                        ciao
+                    <div className="w-full h-full flex flex-col items-center justify-center">
+                        <div className="h-min shadow-[0_7px_10px_3px_rgba(0,0,0,0.3)] rounded-xl flex flex-col items-center justify-center h-[40vh] w-[50vw]">
+                           <FaceFrownIcon className="text-secondary-400 w-[20vw]"/>
+                            <div className="text-primary-200 text-2xl px-6 text-center">
+                                <b className="text-red-400 font-black">Error:</b> No data available, please start a new research
+                            </div>
+                        </div> 
                     </div>
                 </>}
 
