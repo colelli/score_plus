@@ -1,6 +1,7 @@
 import { ExclamationTriangleIcon } from "@heroicons/react/16/solid"
 import { FaceFrownIcon } from "@heroicons/react/24/outline"
 import { useEffect, useState } from "react"
+import NoData from "./utils/NoData"
 
 function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
@@ -11,7 +12,7 @@ const description = "Apache Log4j2 2.0-beta9 through 2.15.0 (excluding security 
 export default function Dashboard() {
 
     const temp = { critical_cve_number: 10, score: 10.0, cve_list: [1]}
-    const [result, SetResult] = useState({})
+    const [result, SetResult] = useState(temp)
 
     useEffect
 
@@ -19,7 +20,7 @@ export default function Dashboard() {
         <div className="h-full w-full flex flex-col gap-5 p-5">
             {Object.keys(result).length != 0 &&
                 <>
-                    <div className="w-full flex justify-center drop-shadow-2xl text-secondary-100 font-black text-md | sm:text-6xl">DASHBOARD</div>
+                    <div className="w-full flex justify-center drop-shadow-[7px_7px_10px_rgba(0,0,0,0.35)] text-secondary-100 font-black text-md | sm:text-6xl">DASHBOARD</div>
                     <div className="h-px flex flex-1 gap-5 flex-col lg:flex-row">
                         
                         {/*Dashboard Summary Card*/}
@@ -60,12 +61,12 @@ export default function Dashboard() {
                             <table className="table-fixed w-full border-collapse text-center">
                                 <thead className="h-[4vh]">
                                     <tr>
-                                        <th className="border-b border-r border-blue-300 p-2 pb-4 w-[14vw] | lg:w-[7vw]">CVE-ID</th>
+                                        <th className="border-b border-r border-blue-300 p-2 pb-4 w-[15vw] | lg:w-[8vw]">CVE-ID</th>
                                         <th className="border-b border-x border-blue-300 p-2 pb-4">Description</th>
                                         <th className="border-b border-x border-blue-300 p-2 pb-4 w-[9vw] | sm:text-balance | lg:w-[7vw]">Base Score</th>
                                         <th className="border-b border-x border-blue-300 p-2 pb-4 w-[9vw] | sm:text-balance | lg:w-[7vw]">Impact Score</th>
                                         <th className="border-b border-x border-blue-300 p-2 pb-4 w-[9vw] | sm:text-balance | lg:w-[7vw]">Severity Score</th>
-                                        <th className="border-b border-l border-blue-300 p-2 pb-4 w-[4vw] p-2 pb-4 | lg:w-[2vw]"></th>
+                                        <th className="border-b border-l border-blue-300 p-2 pb-4 w-[4vw] | lg:w-[2vw]"></th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -73,16 +74,16 @@ export default function Dashboard() {
                                         (cve) =>
                                         <tr className="h-[9vh]">
                                             {/*TO-DO: Add data fetch*/}
-                                            <td className="border-b border-r border-blue-300">CVE-2021-44228</td>
-                                            <td className="border-b border-x border-blue-300">
+                                            <td className="border-b border-r border-blue-300 p-2">CVE-2021-44228</td>
+                                            <td className="border-b border-x border-blue-300 p-2">
                                                 <div className="text-left line-clamp-3" title={description}>
                                                     {description}
                                                 </div>
                                             </td>
-                                            <td className="border-b border-x border-blue-300">9.0</td>
-                                            <td className="border-b border-x border-blue-300">3.9</td>
-                                            <td className="border-b border-x border-blue-300">Critical</td>
-                                            <td className="border-b border-l border-blue-300 text-red-500 text-4xl">&#9679;</td>
+                                            <td className="border-b border-x border-blue-300 p-2">9.0</td>
+                                            <td className="border-b border-x border-blue-300 p-2">3.9</td>
+                                            <td className="border-b border-x border-blue-300 p-2">Critical</td>
+                                            <td className="border-b border-l border-blue-300 p-2 text-red-500 text-4xl">&#9679;</td>
                                         </tr>
                                     )}                                  
                                 </tbody>
@@ -94,14 +95,7 @@ export default function Dashboard() {
 
             {Object.keys(result).length == 0 &&
                 <>
-                    <div className="w-full h-full flex flex-col items-center justify-center">
-                        <div className="h-min shadow-[0_7px_10px_3px_rgba(0,0,0,0.3)] rounded-xl flex flex-col items-center justify-center h-[40vh] w-[50vw]">
-                           <FaceFrownIcon className="text-secondary-400 w-[20vw]"/>
-                            <div className="text-primary-200 text-2xl px-6 text-center">
-                                <b className="text-red-400 font-black">Error:</b> No data available, please start a new research
-                            </div>
-                        </div> 
-                    </div>
+                    <NoData></NoData>
                 </>}
 
         </div>

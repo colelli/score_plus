@@ -2,6 +2,7 @@ import './css/scoreplus.scss'
 import Navbar from './elements/Navbar'
 import Sidebar from './elements/Sidebar'
 import Dashboard from './elements/Dashboard'
+import History from './elements/History'
 
 var send = "Invia"
 var search = "Cerca"
@@ -15,7 +16,8 @@ function App() {
       <Navbar></Navbar>
       <main className='bg-primary-500 h-[93vh] flex'>
         <Sidebar current='dashboard'></Sidebar>
-        <Dashboard></Dashboard>
+        {/*<Dashboard></Dashboard>*/}
+        <History></History>
       </main>
     </div>
   )
