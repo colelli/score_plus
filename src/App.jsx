@@ -4,11 +4,6 @@ import Sidebar from './elements/Sidebar'
 import Dashboard from './elements/Dashboard'
 import History from './elements/History'
 
-var send = "Invia"
-var search = "Cerca"
-var file_upload = "File Upload"
-var drag_and_drop = "Drag and Drop file"
-
 function App() {
 
   return(

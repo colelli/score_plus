@@ -1,10 +1,7 @@
 import { Fragment } from 'react'
 import { Disclosure, Menu, Transition } from '@headlessui/react'
 import { Bars3Icon, BellIcon, XMarkIcon, UserGroupIcon } from '@heroicons/react/24/outline'
-
-function classNames(...classes) {
-  return classes.filter(Boolean).join(' ')
-}
+import { classNames } from './utils/Utils'
 
 const logo_path = "src/assets/score_plus_logo.svg"
 

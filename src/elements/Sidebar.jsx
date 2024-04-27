@@ -1,15 +1,13 @@
 import { Disclosure } from '@headlessui/react'
 import { Fragment } from 'react'
-import { ComputerDesktopIcon, ClipboardIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline';
-
-function classNames(...classes) {
-    return classes.filter(Boolean).join(' ')
-}
+import { ComputerDesktopIcon, ClipboardIcon, MagnifyingGlassIcon, ArrowPathIcon } from '@heroicons/react/24/outline';
+import { classNames } from './utils/Utils';
 
 const sidebar_items = [
     {name: 'Dashboard', href: '#', icon: <ComputerDesktopIcon className='h-6 w-6' aria-hidden='true'/>, id: 'dashboard'},
     {name: 'History', href: '#', icon: <ClipboardIcon className='h-6 w-6' aria-hidden='true'/>, id: 'history'},
-    {name: 'Search', href: '#', icon: <MagnifyingGlassIcon className='h-6 w-6' aria-hidden='true'/>, id: 'search'}
+    {name: 'Search', href: '#', icon: <MagnifyingGlassIcon className='h-6 w-6' aria-hidden='true'/>, id: 'search'},
+    {name: 'Convert', href: '#', icon: <ArrowPathIcon className='h-6 w-6' aria-hidden='true'/>, id:'convert'}
 ]
 
 export default function Sidebar(params) {
