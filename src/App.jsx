@@ -3,6 +3,7 @@ import Navbar from './elements/Navbar'
 import Sidebar from './elements/Sidebar'
 import Dashboard from './elements/Dashboard'
 import History from './elements/History'
+import Search from './elements/Search'
 
 function App() {
 
@@ -12,7 +13,8 @@ function App() {
       <main className='bg-primary-500 h-[93vh] flex'>
         <Sidebar current='dashboard'></Sidebar>
         {/*<Dashboard></Dashboard>*/}
-        <History></History>
+        {/*<History></History>*/}
+        <Search></Search>
       </main>
     </div>
   )
