@@ -4,6 +4,7 @@ import Sidebar from './elements/Sidebar'
 import Dashboard from './elements/Dashboard'
 import History from './elements/History'
 import Search from './elements/Search'
+import Convert from './elements/Convert'
 
 function App() {
 
@@ -14,7 +15,8 @@ function App() {
         <Sidebar current='dashboard'></Sidebar>
         {/*<Dashboard></Dashboard>*/}
         {/*<History></History>*/}
-        <Search></Search>
+        {/*<Search></Search>*/}
+        <Convert></Convert>
       </main>
     </div>
   )

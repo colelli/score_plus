@@ -3,6 +3,7 @@ import { ExclamationTriangleIcon } from "@heroicons/react/24/solid"
 import { useState, useEffect } from "react"
 import { useTimeoutFn } from "react-use"
 import NoData from "./utils/NoData"
+import InfoBox from "./utils/InfoBox"
 import { classNames, camelCaseToString, temp, severityMapping } from "./utils/Utils"
 
 export default function Search() {
@@ -70,26 +71,17 @@ function CVEResult(params) {
                     <NoData msg="No data has been found for the given CVE-ID" />
                 }
             </>}
-            {params.fetchedData == false && <>
+            {params.fetchedData == false &&
                 <></>
-            </>}
+            }
         </>
-    )
-}
-
-function InfoBox(params) {
-    return (
-        <div className="flex flex-col pt-2 h-min h-max-[20vh] | lg:pt-0">
-            <div className="border-b border-blue-300 font-bold text-lg" title={params.boxTitle}>{params.boxTitle}</div>
-            <div className="text-justify pt-1 line-clamp-6" title={params.text}>{params.text}</div>
-        </div>
     )
 }
 
 function CVSSBox(params) {
 
     const dictToArray = Object.entries(params.cvssData)
-    const data = params.cvssData.version == "3.1" ? dictToArray.slice(1, dictToArray.length - 2) : dictToArray.slice(1, dictToArray.length - 1)
+    const data = params.cvssData.version == "3.1" ? dictToArray.slice(1, dictToArray.length - 3) : dictToArray.slice(1, dictToArray.length - 2)
 
     return (
         <div className="flex flex-col pt-2 h-min h-max-[20vh]">
