@@ -1,6 +1,6 @@
 import { Fragment } from 'react'
 import { Disclosure, Menu, Transition } from '@headlessui/react'
-import { Bars3Icon, BellIcon, XMarkIcon, UserGroupIcon } from '@heroicons/react/24/outline'
+import { BellIcon, UserGroupIcon } from '@heroicons/react/24/outline'
 import { classNames } from './utils/Utils'
 
 const logo_path = "src/assets/score_plus_logo.svg"
@@ -33,15 +33,15 @@ export default function Navbar() {
 
                 {/*New Research*/}
                 <div className="hidden sm:ml-6 sm:block">
-                    <div className="flex space-x-4">
-                        <a
-                            href='#'
-                            className='btn rounded-md mr-2 px-3 py-2 text-sm font-medium'
-                            aria-current='page'
-                            >
-                            + Research
-                        </a>
-                    </div>
+                  <div className="flex space-x-4">
+                    <a
+                      href='#'
+                      className='btn rounded-md mr-2 px-3 py-2 text-sm font-medium'
+                      aria-current='page'
+                    >
+                      + Research
+                    </a>
+                  </div>
                 </div>
 
                 {/* Profile dropdown */}
@@ -50,7 +50,7 @@ export default function Navbar() {
                     <Menu.Button className="relative flex rounded-full text-gray-400 hover:text-white bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 hover:border-blue-400">
                       <span className="absolute -inset-1.5" />
                       <span className="sr-only">Open user menu</span>
-                      <UserGroupIcon className='h-8 w-8 rounded-full' aria-hidden='true'/>
+                      <UserGroupIcon className='h-8 w-8 rounded-full' aria-hidden='true' />
                     </Menu.Button>
                   </div>
                   <Transition
