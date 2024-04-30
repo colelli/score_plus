@@ -1,9 +1,9 @@
 import { useState } from "react"
 import { useTimeoutFn } from "react-use"
-import { classNames, camelCaseToString, temp, severityMapping } from "./utils/Utils"
+import { classNames, camelCaseToString, temp, severityMapping } from "../utils/Utils"
 import { MagnifyingGlassIcon, ArrowPathIcon } from "@heroicons/react/24/outline"
-import NoData from "./utils/NoData"
-import InfoBox from "./utils/InfoBox"
+import NoData from "../components/nodata/NoData"
+import InfoBox from "../components/infobox/InfoBox"
 import { ExclamationTriangleIcon } from "@heroicons/react/16/solid"
 
 export default function Convert() {

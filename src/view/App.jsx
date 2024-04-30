@@ -1,10 +1,10 @@
 import './css/scoreplus.scss'
-import Navbar from './elements/Navbar'
-import Sidebar from './elements/Sidebar'
-import Dashboard from './elements/Dashboard'
-import History from './elements/History'
-import Search from './elements/Search'
-import Convert from './elements/Convert'
+import Navbar from './components/Navbar'
+import Sidebar from './components/Sidebar'
+import Dashboard from './pages/Dashboard'
+import History from './pages/History'
+import Search from './pages/Search'
+import Convert from './pages/Convert'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 
 function App() {

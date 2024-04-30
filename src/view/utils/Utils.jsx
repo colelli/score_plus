@@ -21,6 +21,8 @@ export const severityMapping = {
     }
 }
 
+export const api_domain = 'http://127.0.0.1:7777'
+
 export function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
 }

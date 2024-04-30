@@ -1,9 +1,9 @@
 import { Fragment } from 'react'
 import { Disclosure, Menu, Transition } from '@headlessui/react'
 import { BellIcon, UserGroupIcon } from '@heroicons/react/24/outline'
-import { classNames } from './utils/Utils'
+import { classNames } from '../utils/Utils'
 
-const logo_path = "src/assets/score_plus_logo.svg"
+const logo_path = "src/view/assets/score_plus_logo.svg"
 
 export default function Navbar() {
   return (

@@ -1,5 +1,5 @@
 import { ComputerDesktopIcon, ClipboardIcon, MagnifyingGlassIcon, ArrowPathIcon } from '@heroicons/react/24/outline';
-import { classNames } from './utils/Utils';
+import { classNames } from '../utils/Utils';
 
 const sidebar_items = [
     {name: 'Dashboard', href: '/dashboard', icon: <ComputerDesktopIcon className='h-6 w-6' aria-hidden='true'/>, id: 'dashboard'},

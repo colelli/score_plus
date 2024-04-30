@@ -27,3 +27,11 @@ dist-ssr
 .node_modules
 .vite
 *.bak
+
+#dirs
+creds/
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class

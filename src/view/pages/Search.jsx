@@ -2,9 +2,9 @@ import { MagnifyingGlassIcon, ArrowPathIcon } from "@heroicons/react/24/outline"
 import { ExclamationTriangleIcon } from "@heroicons/react/24/solid"
 import { useState, useEffect } from "react"
 import { useTimeoutFn } from "react-use"
-import NoData from "./utils/NoData"
-import InfoBox from "./utils/InfoBox"
-import { classNames, camelCaseToString, temp, severityMapping } from "./utils/Utils"
+import NoData from "../components/nodata/NoData"
+import InfoBox from "../components/infobox/InfoBox"
+import { classNames, camelCaseToString, temp, severityMapping } from "../utils/Utils"
 
 export default function Search() {
 
