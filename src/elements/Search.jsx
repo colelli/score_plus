@@ -17,10 +17,9 @@ export default function Search() {
         <div className="h-full max-h-full w-full flex flex-col gap-5 p-5">
             <div className="w-full flex justify-center drop-shadow-[7px_7px_10px_rgba(0,0,0,0.35)] text-secondary-100 font-black text-md | sm:text-6xl">SEARCH</div>
             <div className="lg:flex lg:flex-row lg:gap-5 lg:items-center">
-                <div className={classNames(isDescVisible ? "" : "hidden", "rounded-lg shadow-[0_7px_10px_3px_rgba(0,0,0,0.3)] h-min w-full text-white p-4 text-justify text-lg | lg:w-[30vw]")}>
-                    The search function of the App allows users to look-up a specific CVE
-                    by inputting its ID in the search bar below. <br /> The system will fetch for any available
-                    data through the NVD (National Vulnerability Database), and print summarized, as well as full in-depth, results.
+                <div className={classNames((isDescVisible?"":"hidden"),"rounded-lg shadow-[0_7px_10px_3px_rgba(0,0,0,0.3)] w-full text-white p-4 text-justify text-lg | lg:w-[30vw]")}>
+                The search function of the App allows users to look-up a specific CVE by inputting its ID in the search bar below. <br /> 
+                The system will fetch for any available data through the NVD (National Vulnerability Database), and print summarized, as well as full in-depth, results.   
                 </div>
                 <div className="flex flex-row gap-5 rounded mt-4 items-center | lg:mt-0 lg:gap-2 lg:flex-1">
                     <input title="Input CVE-ID" type="text" className="rounded-md flex-1 p-2 pl-5" placeholder="e.g.: CVE-2021-44228" />

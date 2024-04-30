@@ -5,18 +5,23 @@ import Dashboard from './elements/Dashboard'
 import History from './elements/History'
 import Search from './elements/Search'
 import Convert from './elements/Convert'
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
 
 function App() {
 
-  return(
+  return (
     <div className='w-screen bg-primary-700 font-sans overflow-hidden'>
       <Navbar></Navbar>
       <main className='bg-primary-500 h-[93vh] flex'>
-        <Sidebar current='dashboard'></Sidebar>
-        {/*<Dashboard></Dashboard>*/}
-        {/*<History></History>*/}
-        {/*<Search></Search>*/}
-        <Convert></Convert>
+        <Sidebar></Sidebar>
+        <BrowserRouter>
+          <Routes>
+            <Route path='/dashboard' element={<Dashboard />} />
+            <Route path='/history' element={<History />} />
+            <Route path='/search' element={<Search />} />
+            <Route path='/convert' element={<Convert />} />
+          </Routes>
+        </BrowserRouter>
       </main>
     </div>
   )
