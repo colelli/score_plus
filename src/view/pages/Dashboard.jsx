@@ -54,7 +54,7 @@ export default function Dashboard() {
                         </div>
 
                         {/*Dashboard Table*/}
-                        <div className="text-secondary-100 items-start p-1 flex flex-1 rounded-md bg-primary-400 overflow-auto | sm:w-full | lg:w-auto">
+                        <div className="h-min text-secondary-100 items-start p-1 flex flex-1 rounded-md bg-primary-400 overflow-auto | sm:w-full | lg:w-auto">
                             <table className="table-fixed w-full border-collapse text-center">
                                 <thead className="h-[4vh]">
                                     <tr>

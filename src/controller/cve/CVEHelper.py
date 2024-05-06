@@ -1,6 +1,9 @@
-from src.controller.cve.cve_exceptions import CVEMalformedError, CVEMandatoryError, CVEMissingData
+import sys
+import sys
+sys.path.append('src')
+from controller.cve.cve_exceptions import CVEMalformedError, CVEMandatoryError, CVEMissingData
 from typing import List, Tuple
-import src.utilsToDelete.ToFileUtils as tfu
+import utilsToDelete.ToFileUtils as tfu
 
 
 def _try_get_v31_cvss_metric(metrics: dict) -> dict:

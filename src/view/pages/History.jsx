@@ -4,19 +4,22 @@ import NoData from "../components/nodata/NoData"
 import { classNames, severityMapping } from "../utils/Utils"
 import { api_domain } from "../utils/Utils"
 
-const description = "Apache Log4j2 2.0-beta9 through 2.15.0 (excluding security releases 2.12.2, 2.12.3, and 2.3.1) JNDI features used in configuration, log messages, and parameters do not protect against attacker controlled LDAP and other JNDI related endpoints. An attacker who can control log messages or log message parameters can execute arbitrary code loaded from LDAP servers when message lookup substitution is enabled. From log4j 2.15.0, this behavior has been disabled by default. From version 2.16.0 (along with 2.12.2, 2.12.3, and 2.3.1), this functionality has been completely removed. Note that this vulnerability is specific to log4j-core and does not affect log4net, log4cxx, or other Apache Logging Services projects."
-
 export default function History() {
 
     const [result, SetResult] = useState({})
-    const [isLoading, SetLoading] = useState(false)
+    const [isLoading, SetLoading] = useState(true)
+    const [fetchedData, SetFetchedData] = useState(false)
 
     useEffect(() => {
         const read_data = async () => {
             SetLoading(true)
-            const response = await fetch(api_domain + "/api/gethistory")
-            const data = await response.json()
-            SetResult({ history: data })
+            try{
+                const response = await fetch(api_domain + "/api/gethistory")
+                const data = await response.json()
+                SetResult({ history: data })
+            }catch{
+                console.warn("Error during data fetch!")
+            }
             SetLoading(false)
         }
 
@@ -24,7 +27,11 @@ export default function History() {
     }, [])
 
     return (
-        <div className="h-min max-h-full w-full flex flex-col gap-5 p-5">
+        <div className="h-full w-full flex flex-col gap-5 p-5 justify-center">
+            {/*Loading placeholder*/}
+            {isLoading && <ArrowPathIcon className="h-32 w-32 rotate-center text-secondary-400 place-self-center" />}
+
+            {/*Result has been fetched*/}
             {Object.keys(result).length != 0 &&
                 <>
                     <div className="w-full flex justify-center drop-shadow-[7px_7px_10px_rgba(0,0,0,0.35)] text-secondary-100 font-black text-md | sm:text-6xl">HISTORY</div>
@@ -65,12 +72,13 @@ export default function History() {
                                 </tbody>
                             </table>
                         }
-                        {isLoading && <ArrowPathIcon className="h-32 w-32 rotate-center text-secondary-400 place-self-center" />}
                     </div>
                 </>}
-            {Object.keys(result).length == 0 &&
+
+            {/*Result has not been fetched or an error occurred*/}
+            {Object.keys(result).length == 0 && !isLoading &&
                 <>
-                    <NoData/>
+                    <NoData msg={<>Error during data fetch.<br/>Data might not be available.</>}/>
                 </>}
         </div>
     )
