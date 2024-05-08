@@ -1,17 +1,46 @@
 import { MagnifyingGlassIcon, ArrowPathIcon } from "@heroicons/react/24/outline"
 import { ExclamationTriangleIcon } from "@heroicons/react/24/solid"
-import { useState, useEffect } from "react"
-import { useTimeoutFn } from "react-use"
+import { useState } from "react"
 import NoData from "../components/nodata/NoData"
 import InfoBox from "../components/infobox/InfoBox"
-import { classNames, camelCaseToString, temp, severityMapping } from "../utils/Utils"
+import { classNames, camelCaseToString, severityMapping, api_domain} from "../utils/Utils"
+import Alert from "../components/Alert"
 
 export default function Search() {
 
     const [isLoading, SetIsLoading] = useState(false)
     const [fetchedData, SetFetchedData] = useState(false)
     const [isDescVisible, SetDescVisible] = useState(true)
-    let [, , ResetIsLoading] = useTimeoutFn(() => SetIsLoading(false), 5000)
+    const [cve_id, SetCveID] = useState('')
+    const [result, SetResult] = useState({})
+
+    // Alert states
+    const [showAlert, setShowAlert] = useState(false)
+    const [isError, setIsError] = useState(false)
+
+    const search_data = async () => {
+        SetIsLoading(true)
+        try{
+            const response = await fetch(api_domain + "/api/getcve?cveId=" + cve_id)
+            const data = await response.json()
+            console.log(response)
+            console.log(data)
+
+            SetResult(data)
+            SetFetchedData(true)
+            SetDescVisible(false)
+            SetResult(data)
+        }catch{
+            console.warn("Error during data fetch!")
+            setShowAlert(true)
+            setIsError(true)
+
+            setTimeout(() => {
+                setShowAlert(false)
+            }, 3000);
+        }
+        SetIsLoading(false)
+    }
 
     return (
         <div className="h-full max-h-full w-full flex flex-col gap-5 p-5">
@@ -22,27 +51,25 @@ export default function Search() {
                 The system will fetch for any available data through the NVD (National Vulnerability Database), and print summarized, as well as full in-depth, results.   
                 </div>
                 <div className="flex flex-row gap-5 rounded mt-4 items-center | lg:mt-0 lg:gap-2 lg:flex-1">
-                    <input title="Input CVE-ID" type="text" className="rounded-md flex-1 p-2 pl-5" placeholder="e.g.: CVE-2021-44228" />
+                    <input title="Input CVE-ID" type="text" className="rounded-md flex-1 p-2 pl-5" placeholder="e.g.: CVE-2021-44228" value={cve_id} onChange={(e) => SetCveID(e.target.value)}/>
                     <button title="Search CVE" className="h-min w-[10vw] p-2 rounded flex justify-center btn" onClick={() => {
-                        SetIsLoading(true)
-                        SetDescVisible(false)
-                        SetFetchedData(true)
-                        ResetIsLoading()
+                        search_data();
                     }}>
                         <MagnifyingGlassIcon className="h-6" />
                     </button>
                 </div>
             </div>
             <div className={classNames(isLoading ? "justify-center" : "", "h-full overflow-auto w-full flex rounded")}>
-                {isLoading ? <ArrowPathIcon className="h-32 w-32 rotate-center text-secondary-400 place-self-center" /> : <CVEResult fetchedData={fetchedData} />}
+                {isLoading ? <ArrowPathIcon className="h-32 w-32 rotate-center text-secondary-400 place-self-center" /> : <CVEResult fetchedData={fetchedData} result={result}/>}
             </div>
+            <Alert msg="Error during data fetch!" show={showAlert} isError={isError}/>
         </div>
     )
 }
 
 function CVEResult(params) {
 
-    const [result, SetResult] = useState(temp)
+    const result = params.result
 
     return (
         <>
@@ -51,18 +78,18 @@ function CVEResult(params) {
                     <div className="text-white h-full w-full flex flex-col gap-4 | lg:flex-row">
                         <div className="flex flex-row gap-4 items-center | lg:w-[30vw] lg:h-full lg:items-start lg:flex-col">
                             <div className="rounded flex flex-1 flex-col p-4 shadow-[0_7px_10px_3px_rgba(0,0,0,0.3)] bg-primary-700 | lg:w-full lg:flex-none lg:h-[20vh] lg:gap-1">
-                                <b className="text-4xl pb-2">{result.vulnerabilities[0].cve.id}</b>
-                                <div>Base Score: <b>{result.vulnerabilities[0].cve.metrics.cvssMetricV31[0]?.cvssData.baseScore.toFixed(1)}</b></div>
-                                <div>Severity: <b>{result.vulnerabilities[0].cve.metrics.cvssMetricV31[0]?.cvssData.baseSeverity}</b></div>
-                                <div>Last Update: <b>{result.vulnerabilities[0].cve.lastModified.slice(0, 10)}</b></div>
+                                <b className="text-4xl pb-2">{result.id}</b>
+                                <div>Base Score: <b>{result.metrics.cvssMetricV31[0]?.cvssData.baseScore.toFixed(1)}</b></div>
+                                <div>Severity: <b>{result.metrics.cvssMetricV31[0]?.cvssData.baseSeverity}</b></div>
+                                <div>Last Update: <b>{result.lastModified.slice(0, 10)}</b></div>
                             </div>
-                            <ExclamationTriangleIcon className={classNames((severityMapping[result.vulnerabilities[0].cve.metrics.cvssMetricV31[0]?.cvssData.baseSeverity]).text, "h-32 mr-2 drop-shadow-xl | lg:h-64 lg:self-center")} />
+                            <ExclamationTriangleIcon className={classNames((severityMapping[result.metrics.cvssMetricV31[0]?.cvssData.baseSeverity]).text, "h-32 mr-2 drop-shadow-xl | lg:h-64 lg:self-center")} />
                         </div>
                         <div className="rounded h-full w-full flex flex-col gap-4 overflow-auto">
-                            <InfoBox boxTitle="CISA Vulnerability Name" text={result.vulnerabilities[0].cve.cisaVulnerabilityName} />
-                            <InfoBox boxTitle="Description" text={result.vulnerabilities[0].cve.descriptions[0].value} />
-                            <InfoBox boxTitle="CISA Required Action" text={result.vulnerabilities[0].cve.cisaRequiredAction} />
-                            <CVSSBox boxTitle="CVSS Metrics" cvssData={result.vulnerabilities[0].cve.metrics.cvssMetricV31[0].cvssData} />
+                            <InfoBox boxTitle="CISA Vulnerability Name" text={result.cisaVulnerabilityName} />
+                            <InfoBox boxTitle="Description" text={result.descriptions[0].value} />
+                            <InfoBox boxTitle="CISA Required Action" text={result.cisaRequiredAction} />
+                            <CVSSBox boxTitle="CVSS Metrics" cvssData={result.metrics.cvssMetricV31[0].cvssData} />
                         </div>
                     </div>
                 }
