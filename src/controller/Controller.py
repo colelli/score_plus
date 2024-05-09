@@ -2,12 +2,11 @@ from flask import Flask, request, abort
 from flask_cors import CORS, cross_origin
 import sys
 sys.path.append('src')
-from controller.cve.CVEHelper import CVE
-import model.Dao as db
+import controller.DashboardController as dc
+import controller.SearchController as sc
+import controller.HistoryController as hc
+from controller.utils.ControllerUitls import check_cve
 import logging
-import requests
-
-__cvwelibapi = "http://127.0.0.1:8080/api/"
 
 __app = Flask("score_plus")
 __cors = CORS(__app)
@@ -17,25 +16,30 @@ __app.config['CORS_HEADERS'] = 'Content-Type'
 @__app.route('/api/gethistory', methods=['GET'])
 @cross_origin()
 def get_history():
-    return db.read_history()
+    args = request.args.to_dict()
+    logging.debug(args)
+
+    if len(args) == 0:
+        return hc._get_history()
+
+    for arg in args:
+        if arg == 'keyword':
+            print(args[arg])
+            return hc._search_history_id(args[arg])
+    
+    abort(400) # No matching function found
 
 
 @__app.route('/api/addhistory', methods=['GET'])
 @cross_origin()
 def add_history():
-    return db.add_history()
+    return hc._add_history()
 
 
 @__app.route('/api/getdashboard', methods=['GET'])
 @cross_origin()
 def get_dashboard():
-    out = {}
-    data = db.read_history()
-    most_recent = data[-1]
-
-    # construct response
-    out = most_recent
-    out['cve_list'] = [__get_cve_json(cve_id) for cve_id in most_recent['cve_id_list']]
+    return dc._get_dashboard()
 
 
 @__app.route('/api/getcve', methods=['GET'])
@@ -49,12 +53,9 @@ def get_cve():
     
     for arg in args:
         if arg == 'cveId':
-            result = requests.get(f"{__cvwelibapi}get_cve?cveId={args[arg]}") if args[arg].strip() != "" else abort(400)
-            return result.content
+            return sc._get_cve_from_id(args[arg]) if check_cve(args[arg]) else abort(400)
         
     abort(400) # No matching function found
 
-def __get_cve_json(cve_id: str):
-    pass
 
 __app.run(port=7777)
