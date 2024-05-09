@@ -26,7 +26,6 @@ export default function Search() {
             console.log(response)
             console.log(data)
 
-            SetResult(data)
             SetFetchedData(true)
             SetDescVisible(false)
             SetResult(data)

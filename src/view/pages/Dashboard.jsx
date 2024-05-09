@@ -1,20 +1,52 @@
 import { ExclamationTriangleIcon } from "@heroicons/react/16/solid"
 import { useEffect, useState } from "react"
 import NoData from "../components/nodata/NoData"
-import { classNames, severityMapping } from "../utils/Utils"
+import { classNames, severityMapping, api_domain } from "../utils/Utils"
+import { ArrowPathIcon } from "@heroicons/react/24/outline"
 
 const description = "Apache Log4j2 2.0-beta9 through 2.15.0 (excluding security releases 2.12.2, 2.12.3, and 2.3.1) JNDI features used in configuration, log messages, and parameters do not protect against attacker controlled LDAP and other JNDI related endpoints. An attacker who can control log messages or log message parameters can execute arbitrary code loaded from LDAP servers when message lookup substitution is enabled. From log4j 2.15.0, this behavior has been disabled by default. From version 2.16.0 (along with 2.12.2, 2.12.3, and 2.3.1), this functionality has been completely removed. Note that this vulnerability is specific to log4j-core and does not affect log4net, log4cxx, or other Apache Logging Services projects."
 
 export default function Dashboard() {
 
     const temp = { score:10.0, cve_counts: [13, 20, 15], cwe_counts: [3, 7], cve_list: [{id: "CVE-2021-44228", desc: description, base_score: 9.0, impact_score: 3.9, severity: "Critical"}]}
-    const cve_last = temp.cve_list[temp.cve_list.length - 1]
-    const [result, SetResult] = useState(temp)
 
-    useEffect
+    const [result, SetResult] = useState({})
+    const [isLoading, SetIsLoading] = useState(true)
+
+    // Alert states
+    const [showAlert, setShowAlert] = useState(false)
+    const [isError, setIsError] = useState(false)
+
+    const get_dashboard = async () => {
+        SetIsLoading(true)
+        try{
+            const response = await fetch(api_domain + "/api/getdashboard")
+            const data = await response.json()
+            console.log(response)
+            console.log(data)
+
+            SetResult(data)
+        }catch{
+            console.warn("Error during data fetch!")
+            setShowAlert(true)
+            setIsError(true)
+
+            setTimeout(() => {
+                setShowAlert(false)
+            }, 3000);
+        }
+        SetIsLoading(false)
+    }
+
+    useEffect(() => {
+        get_dashboard()
+    }, [])
 
     return (
-        <div className="h-min h-max-full w-full flex flex-col gap-5 p-5">
+        <div className={classNames(isLoading?'h-full':'h-min', 'w-full flex flex-col gap-5 p-5 items-center justify-center')}>
+            {/*Loading placeholder*/}
+            {isLoading && <ArrowPathIcon className="h-32 w-32 rotate-center text-secondary-400" />}
+
             {Object.keys(result).length != 0 &&
                 <>
                     <div className="w-full flex justify-center drop-shadow-[7px_7px_10px_rgba(0,0,0,0.35)] text-secondary-100 font-black text-md | sm:text-6xl">DASHBOARD</div>
@@ -29,26 +61,30 @@ export default function Dashboard() {
                                 <b className="text-secondary-100">Vulnerabilities</b>
                                 <li className="flex flex-row gap-2 items-center">
                                     <ExclamationTriangleIcon className="h-5 fill-red-500" />
-                                    Critical: <b>{result.cve_counts[0]}</b>
+                                    Critical: <b>{result.criticalVuln}</b>
+                                </li>
+                                <li className="flex flex-row gap-2 items-center">
+                                    <ExclamationTriangleIcon className="h-5 fill-orange-400" />
+                                    High: <b>{result.highVuln}</b>
                                 </li>
                                 <li className="flex flex-row gap-2 items-center">
                                     <ExclamationTriangleIcon className="h-5 fill-yellow-400" />
-                                    Medium: <b>{result.cve_counts[1]}</b>
+                                    Medium: <b>{result.mediumVuln}</b>
                                 </li>
                                 <li className="flex flex-row gap-2 items-center">
                                     <ExclamationTriangleIcon className="h-5 fill-green-400" />
-                                    Low: <b>{result.cve_counts[2]}</b>
+                                    Low: <b>{result.lowVuln}</b>
                                 </li>
                             </ul>
                             <ul className="flex flex-col self-start">
                                 <b className="text-secondary-100">Weaknesses</b>
                                 <li className="flex flex-row gap-2 items-center">
                                     <ExclamationTriangleIcon className="h-5 fill-red-500" />
-                                    Primary: <b>{result.cwe_counts[0]}</b>
+                                    Primary: <b>{result.primaryWeak}</b>
                                 </li>
                                 <li className="flex flex-row gap-2 items-center">
                                     <ExclamationTriangleIcon className="h-5 fill-yellow-400" />
-                                    Secondary: <b>{result.cwe_counts[1]}</b>
+                                    Secondary: <b>{result.secondaryWeak}</b>
                                 </li>
                             </ul>
                         </div>
@@ -67,21 +103,21 @@ export default function Dashboard() {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {result.cve_list.map(
-                                        (cve) =>
+                                    {result.cveList.map(
+                                        (cve, index) =>
                                         <tr className="h-[9vh]">
                                             {/*TO-DO: Add data fetch*/}
-                                            <td className={classNames((cve != cve_last)?"border-b":"","border-r border-blue-300 p-2")}>{cve.id}</td>
-                                            <td className={classNames((cve != cve_last)?"border-b":"","border-x border-blue-300 p-2")}>
+                                            <td className={classNames((index != result.cveList.length-1)?"border-b":"","border-r border-blue-300 p-2")}>{cve.id}</td>
+                                            <td className={classNames((index != result.cveList.length-1)?"border-b":"","border-x border-blue-300 p-2")}>
                                                 <div className="text-left line-clamp-3" title={cve.desc}>
                                                     {cve.desc}
                                                 </div>
                                             </td>
-                                            <td className={classNames((cve != cve_last)?"border-b":"","border-x border-blue-300 p-2")}>{cve.base_score}</td>
-                                            <td className={classNames((cve != cve_last)?"border-b":"","border-x border-blue-300 p-2")}>{cve.impact_score}</td>
-                                            <td className={classNames((cve != cve_last)?"border-b":"","border-x border-blue-300 p-2")}>{cve.severity}</td>
-                                            <td className={classNames((cve != cve_last)?"border-b":"","border-l border-blue-300 p-2 text-4xl")}>
-                                                <div className={(severityMapping[cve.severity.toUpperCase()]).text}>&#9679;</div>
+                                            <td className={classNames((index != result.cveList.length-1)?"border-b":"","border-x border-blue-300 p-2")}>{cve.baseScore}</td>
+                                            <td className={classNames((index != result.cveList.length-1)?"border-b":"","border-x border-blue-300 p-2")}>{cve.impactScore}</td>
+                                            <td className={classNames((index != result.cveList.length-1)?"border-b":"","border-x border-blue-300 p-2")}>{cve.severity}</td>
+                                            <td className={classNames((index != result.cveList.length-1)?"border-b":"","border-l border-blue-300 p-2 text-4xl")}>
+                                                <div className={(severityMapping[String(cve.severity).toUpperCase()]).text}>&#9679;</div>
                                             </td>
                                         </tr>
                                     )}                                  
@@ -92,7 +128,7 @@ export default function Dashboard() {
                     </div>
                 </>}
 
-            {Object.keys(result).length == 0 &&
+            {Object.keys(result).length == 0 && !isLoading &&
                 <>
                     <NoData></NoData>
                 </>}
