@@ -1,9 +1,8 @@
-import { Fragment, useEffect, useState } from 'react'
+import { Fragment } from 'react'
 import { Disclosure, Menu, Transition } from '@headlessui/react'
 import { BellIcon, UserGroupIcon } from '@heroicons/react/24/outline'
 import { classNames } from '../utils/Utils'
-import NewResearch from './NewResearch'
-import { createPortal } from 'react-dom'
+
 
 const logo_path = "src/view/assets/score_plus_logo.svg"
 

@@ -1,6 +1,6 @@
 import { ExclamationTriangleIcon } from "@heroicons/react/16/solid"
 import { useEffect, useState } from "react"
-import NoData from "../components/nodata/NoData"
+import NoData from "../components/NoData"
 import { classNames, severityMapping, api_domain } from "../utils/Utils"
 import { ArrowPathIcon } from "@heroicons/react/24/outline"
 
@@ -60,30 +60,30 @@ export default function Dashboard() {
                             <ul className="flex flex-col self-start">
                                 <b className="text-secondary-100">Vulnerabilities</b>
                                 <li className="flex flex-row gap-2 items-center">
-                                    <ExclamationTriangleIcon className="h-5 fill-red-500" />
+                                    <ExclamationTriangleIcon className={classNames(severityMapping['CRITICAL'].fill,"h-5")} />
                                     Critical: <b>{result.criticalVuln}</b>
                                 </li>
                                 <li className="flex flex-row gap-2 items-center">
-                                    <ExclamationTriangleIcon className="h-5 fill-orange-400" />
+                                    <ExclamationTriangleIcon className={classNames(severityMapping['HIGH'].fill,"h-5")} />
                                     High: <b>{result.highVuln}</b>
                                 </li>
                                 <li className="flex flex-row gap-2 items-center">
-                                    <ExclamationTriangleIcon className="h-5 fill-yellow-400" />
+                                    <ExclamationTriangleIcon className={classNames(severityMapping['MEDIUM'].fill,"h-5")} />
                                     Medium: <b>{result.mediumVuln}</b>
                                 </li>
                                 <li className="flex flex-row gap-2 items-center">
-                                    <ExclamationTriangleIcon className="h-5 fill-green-400" />
+                                    <ExclamationTriangleIcon className={classNames(severityMapping['LOW'].fill,"h-5")} />
                                     Low: <b>{result.lowVuln}</b>
                                 </li>
                             </ul>
                             <ul className="flex flex-col self-start">
                                 <b className="text-secondary-100">Weaknesses</b>
                                 <li className="flex flex-row gap-2 items-center">
-                                    <ExclamationTriangleIcon className="h-5 fill-red-500" />
+                                    <ExclamationTriangleIcon className={classNames(severityMapping['CRITICAL'].fill,"h-5")} />
                                     Primary: <b>{result.primaryWeak}</b>
                                 </li>
                                 <li className="flex flex-row gap-2 items-center">
-                                    <ExclamationTriangleIcon className="h-5 fill-yellow-400" />
+                                    <ExclamationTriangleIcon className={classNames(severityMapping['MEDIUM'].fill,"h-5")} />
                                     Secondary: <b>{result.secondaryWeak}</b>
                                 </li>
                             </ul>

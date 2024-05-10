@@ -9,7 +9,6 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { useState } from 'react'
 import NewResearch from './components/NewResearch'
 import { classNames } from './utils/Utils'
-import Alert from './components/Alert'
 
 function App() {
 

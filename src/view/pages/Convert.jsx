@@ -1,9 +1,8 @@
 import { useState } from "react"
-import { useTimeoutFn } from "react-use"
-import { classNames, camelCaseToString, temp, severityMapping, api_domain } from "../utils/Utils"
+import { classNames, camelCaseToString, severityMapping, api_domain } from "../utils/Utils"
 import { MagnifyingGlassIcon, ArrowPathIcon } from "@heroicons/react/24/outline"
-import NoData from "../components/nodata/NoData"
-import InfoBox from "../components/infobox/InfoBox"
+import NoData from "../components/NoData"
+import InfoBox from "../components/InfoBox"
 import { ExclamationTriangleIcon } from "@heroicons/react/16/solid"
 import Alert from "../components/Alert"
 
@@ -111,10 +110,10 @@ function Conversion(props) {
                                     <div className="flex flex-row">
                                         <div className="flex-1 items-center">
                                             <b className="text-2xl">CVSS VERSION 4.0</b>
-                                            <div>Base Score: <b>{(v4Result.cvssMetricV4[0].cvssData.version).toFixed(1)}</b></div>
+                                            <div>Base Score: <b>{(v4Result.cvssMetricV4[0].cvssData.baseScore).toFixed(1)}</b></div>
                                             <div>Severity: <b>{v4Result.cvssMetricV4[0].cvssData.baseSeverity}</b></div>
                                         </div>
-                                        <ExclamationTriangleIcon className={classNames(severityMapping[dataV4[dataV4.length - 1][1]].text,"h-28")} />
+                                        <ExclamationTriangleIcon className={classNames(severityMapping[v4Result.cvssMetricV4[0].cvssData.baseSeverity].text,"h-28")} />
                                     </div>
                                 </div>
 

@@ -1,8 +1,8 @@
 import { MagnifyingGlassIcon, ArrowPathIcon } from "@heroicons/react/24/outline"
 import { ExclamationTriangleIcon } from "@heroicons/react/24/solid"
 import { useState } from "react"
-import NoData from "../components/nodata/NoData"
-import InfoBox from "../components/infobox/InfoBox"
+import NoData from "../components/NoData"
+import InfoBox from "../components/InfoBox"
 import { classNames, camelCaseToString, severityMapping, api_domain} from "../utils/Utils"
 import Alert from "../components/Alert"
 

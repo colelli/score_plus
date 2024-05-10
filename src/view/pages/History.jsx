@@ -1,6 +1,6 @@
 import { ArrowPathIcon, ArrowTopRightOnSquareIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline"
-import { useEffect, useRef, useState } from "react"
-import NoData from "../components/nodata/NoData"
+import { useEffect, useState } from "react"
+import NoData from "../components/NoData"
 import { classNames, severityMapping } from "../utils/Utils"
 import { api_domain } from "../utils/Utils"
 import Alert from "../components/Alert"

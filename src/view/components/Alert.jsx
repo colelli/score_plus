@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { classNames } from "../utils/Utils";
 
 export default function Alert(props) {
