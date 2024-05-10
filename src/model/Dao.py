@@ -1,9 +1,6 @@
-import json
-import logging
 import sys
 sys.path.append('src')
 from utilsToDelete.ToFileUtils import get_json_from_file, save_to_json_file
-from datetime import datetime
 import time
 
 # History
