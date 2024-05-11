@@ -37,7 +37,6 @@ export default function Navbar(props) {
                   <div className="hidden sm:ml-6 sm:block">
                     <div className="flex space-x-4">
                       <a
-                        href='#'
                         className='btn rounded-md mr-2 px-3 py-2 text-sm font-medium'
                         aria-current='page'
                         onClick={() => {

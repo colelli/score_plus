@@ -29,6 +29,9 @@ export default function Convert() {
             // Set results
             SetResult(v4Data)
             SetOriginal(originalData)
+
+            SetFetchedData(true)
+            SetDescVisible(false)
         }catch{
             console.warn("Error during data fetch!")
             setShowAlert(true)
@@ -38,8 +41,6 @@ export default function Convert() {
                 setShowAlert(false)
             }, 3000);
         }
-        SetFetchedData(true)
-        SetDescVisible(false)
         SetIsLoading(false)
     }
 
@@ -53,9 +54,9 @@ export default function Convert() {
             <div className="lg:flex lg:flex-row lg:gap-5 lg:items-center">
                 <div className={classNames(isDescVisible ? "" : "hidden", "rounded-lg shadow-[0_7px_10px_3px_rgba(0,0,0,0.3)] h-min w-full text-white p-4 text-justify text-lg | lg:w-[30vw]")}>
                     The convert function of the App allows users to obtain an approximated conversion to the new version 4.0 standard of the
-                    inputted CVSS version 3.1 or version 2.0 Vector String. <br />
+                    inputted CVSS version 3.1 Vector String. <br />
                     This approximated conversion, documented in detail in the thesis material, is useful in the analysis and establishment
-                    of an informed-guess and comparison.
+                    of an informed-guess and comparison for future references.
                 </div>
                 <div className="flex flex-row gap-5 rounded mt-4 items-center | lg:mt-0 lg:gap-2 lg:flex-1">
                     <input title="Input CVE-ID" type="text" className="rounded-md flex-1 p-2 pl-5" placeholder="e.g.: CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:H/A:H" value={vectorString} onChange={(e) => SetVectorString(e.target.value)}/>
