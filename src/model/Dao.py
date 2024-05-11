@@ -51,7 +51,7 @@ def add_history(new_history: dict) -> bool:
         curr_data = read_history()
         curr_data.append(new_history)
         save_to_json_file(curr_data, __HISTORY_DATA, __DEFAULT_PATH)
-    except:
+    except FileNotFoundError:
         return False
     return True
 

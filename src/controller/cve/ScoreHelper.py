@@ -1,7 +1,9 @@
+import sys
+sys.path.append('src')
 import numpy as np
 from typing import List
-from src.controller.cve.CVEHelper import CVE
-from src.controller.cvss.CVSSHelper import CVSSv31Tov4
+from controller.cve.CVEHelper import CVE
+from controller.cvss.CVSSHelper import CVSSv31Tov4
 
 severity_score_mapping = {
     "NONE": 0,
@@ -151,6 +153,19 @@ def calculate_org_score_based_on_cwes(cve_list: List[CVE], mode: str = 'count') 
     else:
         score = (__score_based_on_cwe_count(cve_list) + __score_based_on_cwe_type(cve_list)) / 2
     return round(score, 2)
+
+
+def compute_estimated_severity(base_score: float) -> str:
+    if base_score == 0.0:
+        return "NONE"
+    elif base_score <= 3.9:
+        return "LOW"
+    elif base_score <= 6.9:
+        return "MEDIUM"
+    elif base_score <= 8.9:
+        return "HIGH"
+    else:
+        return "CRITICAL"
 
 
 def __score_based_on_cwe_count(cve_list: List[CVE]) -> float:

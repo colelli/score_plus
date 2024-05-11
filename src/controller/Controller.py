@@ -6,6 +6,7 @@ import controller.DashboardController as dc
 import controller.SearchController as sc
 import controller.HistoryController as hc
 import controller.ConvertController as cc
+import controller.NewResearchController as nc
 from controller.utils.ControllerUitls import check_cve, check_cvss
 import logging
 
@@ -34,7 +35,18 @@ def get_history():
 @__app.route('/api/addhistory', methods=['GET'])
 @cross_origin()
 def add_history():
-    return hc._add_history()
+    args = request.args.to_dict()
+    logging.debug(args)
+
+    if len(args) == 0:
+        abort(403)
+
+    for arg in args:
+        if arg == 'cveId':
+            result = hc._add_history(nc._new_research(args[arg] if check_cve(args[arg]) else abort(400)))
+            return {'success': result}
+
+    abort(400) # No matching function found
 
 
 @__app.route('/api/getdashboard', methods=['GET'])
@@ -61,7 +73,7 @@ def get_cve():
 
 @__app.route('/api/convertcvss', methods=['GET'])
 @cross_origin()
-def convert_cve():
+def convert_cvss():
     args = request.args.to_dict()
     logging.debug(args)
 

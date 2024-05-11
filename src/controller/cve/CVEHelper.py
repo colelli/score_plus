@@ -67,7 +67,6 @@ class CVE(object):
         """
         self.cve_json = cve_json
         # mandatory data
-        self.format = None
         self.cve_id = None
         self.descriptions = []
         # optional data
@@ -88,15 +87,10 @@ class CVE(object):
         # check for mandatory fields before assignment
         self.check_mandatory()
 
-        self.format = self.cve_json['format']
-        cve_data = ((self.cve_json['vulnerabilities'][0])['cve'])
-        self.cve_id = cve_data['id']
-        self.descriptions = cve_data['descriptions']
-
-        if 'metrics' in cve_data.keys():
-            self.metrics = cve_data['metrics']
-        if 'weaknesses' in cve_data.keys():
-            self.weaknesses = cve_data['weaknesses']
+        self.cve_id = self.cve_json['id']
+        self.descriptions = self.cve_json['descriptions']
+        self.metrics = self.cve_json['metrics']
+        self.weaknesses = self.cve_json['weaknesses']
 
     def get_cvss_vector(self, vers: float = 3.1) -> str:
         """
@@ -114,35 +108,37 @@ class CVE(object):
         else:
             raise CVEMissingData("Requested cvss string is missing")
 
-    def get_cvss_base_score(self, vers: float = 3.1) -> float:
+    def get_cvss_base_score(self) -> float:
         """
-        :param vers: chosen version in format M.m (Major.minor)
         :returns: CVSS base score if available
         :raises CVEMalformedError: if version is not supported
         :raises CVEMissingData: if the cvss base score is missing
         """
-        if vers not in self.__supported_vers.keys():
-            raise CVEMalformedError("Requested version is not supported")
+        vers = 3.1
 
-        cvss_data = self.__supported_vers[vers][1](self.metrics)
+        try:
+            cvss_data = self.__supported_vers[vers][1](self.metrics)
+        except CVEMissingData:
+            vers = 2.0
+            cvss_data = self.__supported_vers[vers][1](self.metrics)
+
         if 'baseScore' in cvss_data.keys():
             return cvss_data['baseScore']
         else:
             raise CVEMissingData("Requested cvss base score is missing")
 
-    def get_cvss_severity(self, vers: float = 3.1) -> str:
+    def get_cvss_severity(self) -> str:
         """
-        :param vers: chosen version in format M.m (Major.minor)
         :returns: CVSS base severity if available
-        :raises CVEMalformedError: if version is not supported
         :raises CVEMissingData: if the cvss severity is missing
         """
-        if vers not in self.__supported_vers.keys():
-            raise CVEMalformedError("Requested version is not supported")
-
-        cvss_data = self.__supported_vers[vers][1](self.metrics)
-        # exception for v2 which has basSeverity in metrics
-        if vers == 2.0:
+        vers = 3.1
+        try:
+            # try v.3.1
+            cvss_data = self.__supported_vers[vers][1](self.metrics)
+        except CVEMissingData:
+            # v.3.1 not found -> try v.2.0
+            vers = 2.0
             cvss_data = self.__supported_vers[vers][0](self.metrics)
 
         if 'baseSeverity' in cvss_data.keys():
@@ -150,35 +146,41 @@ class CVE(object):
         else:
             raise CVEMissingData("Requested cvss severity is missing")
 
-    def get_exploitability_score(self, vers: float = 3.1) -> float:
+    def get_exploitability_score(self) -> float:
         """
         Retrieves the CVE CVSS exploitability score based on the given CVSS version (default = 3.1)
-        :param vers: chosen version in format M.m (Major.minor)
         :returns: exploitability score if available
         :raises CVEMalformedError: if version is not supported
         :raises CVEMissingData: if any requested data is missing from the CVE json
         """
-        if vers not in self.__supported_vers.keys():
-            raise CVEMalformedError("Requested version is not supported")
+        vers = 3.1
 
-        cvss_metric = self.__supported_vers[vers][0](self.metrics)
+        try:
+            cvss_metric = self.__supported_vers[vers][0](self.metrics)
+        except CVEMissingData:
+            vers = 2.0
+            cvss_metric = self.__supported_vers[vers][0](self.metrics)
+
         if 'exploitabilityScore' in cvss_metric:
             return cvss_metric['exploitabilityScore']
         else:
             raise CVEMissingData("Requested cvss data is missing, metrics dict does not contain exploitability score")
 
-    def get_impact_score(self, vers: float = 3.1) -> float:
+    def get_impact_score(self) -> float:
         """
-        Retrieves the CVE CVSS impact score based on the given CVSS version (default = 3.1.)
-        :param vers: chosen version in format M.m (Major.minor)
+        Retrieves the CVE CVSS impact score based on the given CVSS version
         :return: impact score if available
         :raises CVEMalformedError: if version is not supported
         :raises CVEMissingData: if any requested data is missing from the CVE json
         """
-        if vers not in self.__supported_vers.keys():
-            raise CVEMalformedError("Requested version is not supported")
+        vers = 3.1
 
-        cvss_metric = self.__supported_vers[vers][0](self.metrics)
+        try:
+            cvss_metric = self.__supported_vers[vers][0](self.metrics)
+        except CVEMissingData:
+            vers = 2.0
+            cvss_metric = self.__supported_vers[vers][0](self.metrics)
+
         if 'impactScore' in cvss_metric:
             return cvss_metric['impactScore']
         else:
@@ -206,11 +208,9 @@ class CVE(object):
         Raises:
             CVEMandatoryError: if mandatory field is missing in the vector
         """
-        if not {'format', 'vulnerabilities'}.issubset(self.cve_json.keys()) or 'cve' not in \
-                self.cve_json['vulnerabilities'][0].keys():
-            raise CVEMandatoryError("Missing mandatory 'format', 'vulnerability' or 'cve' field(s) from CVE-json data")
-        if not {'id', 'descriptions'}.issubset(((self.cve_json['vulnerabilities'][0])['cve']).keys()):
-            raise CVEMandatoryError("Missing mandatory 'id' or 'descriptions' field(s) from CVE-json data")
+        if not {'id', 'descriptions', 'metrics', 'weaknesses'}.issubset(self.cve_json.keys()):
+            print(self.cve_json)
+            raise CVEMandatoryError("Missing mandatory 'id', 'descriptions', 'metrics' or 'weaknesses' field(s) from CVE-json data")
 
     def print_full_report_to_json(self, filename: str = None, filepath: str = "./files/"):
         """
