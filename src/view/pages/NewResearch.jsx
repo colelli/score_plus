@@ -5,7 +5,6 @@ import Alert from "../components/Alert"
 
 export default function NewResearch() {
 
-    const [result, SetResult] = useState({})
     const [isLoading, SetIsLoading] = useState(true)
 
     // Alert states
@@ -13,35 +12,36 @@ export default function NewResearch() {
     const [isError, setIsError] = useState(false)
 
     useEffect(() => {
-        const cveId = location.href.split('?')[1].split('=')[1]
-        fetch_data(cveId)
-    },[])
-
-    const fetch_data = async (cveId) => {
-        try{
-            const response = await fetch(api_domain + "/api/addhistory?cveId=" + cveId)
-            const data = await response.json()
-            if(data.success){
-                setIsError(false)
-                setShowAlert(true)
-                setTimeout(() => {
-                    location.href = '/dashboard'
-                }, 3000)
-            }else{
+        const fetch_data = async (cveId) => {
+            try{
+                const response = await fetch(api_domain + "/api/addhistory?cveId=" + cveId)
+                const data = await response.json()
+                if(data.success){
+                    setIsError(false)
+                    setShowAlert(true)
+                    setTimeout(() => {
+                        location.href = '/dashboard'
+                    }, 3000)
+                }else{
+                    fetch_failed()
+                }
+            }catch(e){
+                console.log(e)
                 fetch_failed()
             }
-        }catch(e){
-            console.log(e)
-            fetch_failed()
         }
-    }
 
-    const fetch_failed = () => {
-        SetIsLoading(false) 
-        setTimeout(() => {
-        location.href = '/dashboard'
-        }, 3000)
-    }
+        const fetch_failed = () => {
+            SetIsLoading(false) 
+            setTimeout(() => {
+            location.href = '/dashboard'
+            }, 3000)
+        }
+
+        const cveId = location.href.split('?')[1].split('=')[1]
+        console.log('ciao')
+        fetch_data(cveId)
+    },[])
 
     return(
         <>
