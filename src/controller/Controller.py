@@ -55,6 +55,17 @@ def get_dashboard():
     return dc._get_dashboard()
 
 
+@__app.route('/api/updatedashboard', methods=['POST'])
+@cross_origin()
+def update_dashboard():
+    data = request.json['list']
+
+    if len(data) == 0:
+        abort(403)
+
+    return {'newScore': dc._update_score(data)}
+
+
 @__app.route('/api/getcve', methods=['GET'])
 @cross_origin()
 def get_cve():

@@ -1,6 +1,7 @@
 import sys
 sys.path.append('src')
 import model.Dao as db
+import controller.cve.ScoreHelper as sh
 from controller.cve.CVEHelper import CVE
 
 
@@ -22,3 +23,16 @@ def __retrieve_cve_data(cve_json: dict):
         'impactScore': cve_data.get_impact_score(),
         'severity': cve_data.get_cvss_severity()
     }
+
+
+def _update_score(excluded_list: list) -> float:
+    most_recent = db.read_most_recent_history()
+    
+    # Construct relevant cve list
+    relevant_cves = []
+    for cve_json in most_recent['cveList']:
+        cve = CVE(cve_json)
+        if cve.cve_id not in excluded_list:
+            relevant_cves.append(cve)
+    
+    return sh.calculate_base_org_score(relevant_cves)

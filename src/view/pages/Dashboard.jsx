@@ -8,9 +8,8 @@ const description = "Apache Log4j2 2.0-beta9 through 2.15.0 (excluding security 
 
 export default function Dashboard() {
 
-    const temp = { score:10.0, cve_counts: [13, 20, 15], cwe_counts: [3, 7], cve_list: [{id: "CVE-2021-44228", desc: description, base_score: 9.0, impact_score: 3.9, severity: "Critical"}]}
-
     const [result, SetResult] = useState({})
+    const [overallScore, SetOverallScore] = useState(0.0)
     const [isLoading, SetIsLoading] = useState(true)
 
     // Alert states
@@ -26,16 +25,21 @@ export default function Dashboard() {
             console.log(data)
 
             SetResult(data)
+            SetOverallScore(data.score.toFixed(1))
         }catch{
-            console.warn("Error during data fetch!")
-            setShowAlert(true)
-            setIsError(true)
-
-            setTimeout(() => {
-                setShowAlert(false)
-            }, 3000);
+            notify_error();
         }
         SetIsLoading(false)
+    }
+
+    const notify_error = () => {
+        console.warn("Error during data fetch!")
+        setShowAlert(true)
+        setIsError(true)
+
+        setTimeout(() => {
+            setShowAlert(false)
+        }, 3000);
     }
 
     useEffect(() => {
@@ -43,15 +47,27 @@ export default function Dashboard() {
     }, [])
 
     let values = [];
-    const update_values = () => {
+    const update_values = async () => {
         let checkboxes = document.querySelectorAll('input[name="cve"]:checked');
+        values = [];
         checkboxes.forEach(checkbox => {
-            values.push(checkbox.value)
+            values.push(checkbox.id)
         })
-        console.log(values)
+        try{
+            const newScore = await fetch(api_domain + '/api/updatedashboard',{
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' }, 
+                body: JSON.stringify({
+                    list: values
+                })
+            })
+            const data = await newScore.json()
+            console.log(data)
+            SetOverallScore(data.newScore.toFixed(1))
+        }catch{
+            notify_error();
+        }
     }
-
-
 
     return (
         <div className={classNames(isLoading?'h-full':'h-min', 'w-full flex flex-col gap-5 p-5 items-center justify-center')}>
@@ -66,7 +82,7 @@ export default function Dashboard() {
                         {/*Dashboard Summary Card*/}
                         <div className="h-min shadow-[0_7px_10px_3px_rgba(0,0,0,0.3)] text-white rounded-md flex flex-col items-center justify-center gap-10 p-4 | sm:w-full sm:flex-row | lg:flex-col lg:py-10 lg:w-[20vw]">
                             <div id='last-score' className="font-bold text-8xl">
-                                {result.score.toFixed(1)}
+                                {overallScore}
                             </div>
                             <ul className="flex flex-col self-start">
                                 <b className="text-secondary-100">Vulnerabilities</b>
@@ -134,7 +150,7 @@ export default function Dashboard() {
                                             <td className={classNames((index != result.cveList.length-1)?"border-b":"","border-l border-blue-300 p-2")}>
                                                 <input type="checkbox" name='cve' className="w-6 h-6" onChange={() => {
                                                     update_values()
-                                                }}/>
+                                                }} id={cve.id}/>
                                             </td>
                                         </tr>
                                     )}                                  
