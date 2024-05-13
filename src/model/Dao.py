@@ -18,9 +18,6 @@ def read_history() -> list:
     data = []
     try:
         data = get_json_from_file(__HISTORY_DATA, __DEFAULT_PATH)
-        for d in data:
-            d["cve_count"]=d['criticalVuln']+d['highVuln']+d['mediumVuln']+d['lowVuln']
-            d["cwe_count"]=d['primaryWeak']+d['secondaryWeak']
     except:
         save_to_json_file([], __HISTORY_DATA, __DEFAULT_PATH)
     return data
@@ -34,8 +31,10 @@ def read_most_recent_history() -> dict:
             A dict representing the most recent history element
     """
     curr_data = read_history()
-    curr_data.sort(key=__sort_by_date) 
-    return curr_data[-1]
+    if len(curr_data) > 0 and curr_data != {}:
+        curr_data.sort(key=__sort_by_date) 
+        return curr_data[-1]
+    return {}
 
 
 def add_history(new_history: dict) -> bool:

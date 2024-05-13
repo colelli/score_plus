@@ -1,7 +1,6 @@
 import sys
 sys.path.append('src')
 import model.Dao as db
-import controller.SearchController as sc
 from controller.cve.CVEHelper import CVE
 
 
@@ -10,12 +9,12 @@ def _get_dashboard() -> dict:
     # construct response
     most_recent = db.read_most_recent_history()
     out = most_recent
-    out['cveList'] = [__retrieve_cve_data(cve_id) for cve_id in most_recent['cveIdList']]
+    out['cveList'] = [__retrieve_cve_data(cve_json) for cve_json in most_recent['cveList']]
     
     return out
 
-def __retrieve_cve_data(cve_id: str):
-    cve_data = CVE(sc._get_cve_from_id(cve_id))
+def __retrieve_cve_data(cve_json: dict):
+    cve_data = CVE(cve_json)
     return {
         'id': cve_data.cve_id,
         'desc': cve_data.descriptions[0]['value'],

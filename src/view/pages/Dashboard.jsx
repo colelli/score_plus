@@ -42,6 +42,17 @@ export default function Dashboard() {
         get_dashboard()
     }, [])
 
+    let values = [];
+    const update_values = () => {
+        let checkboxes = document.querySelectorAll('input[name="cve"]:checked');
+        checkboxes.forEach(checkbox => {
+            values.push(checkbox.value)
+        })
+        console.log(values)
+    }
+
+
+
     return (
         <div className={classNames(isLoading?'h-full':'h-min', 'w-full flex flex-col gap-5 p-5 items-center justify-center')}>
             {/*Loading placeholder*/}
@@ -96,10 +107,11 @@ export default function Dashboard() {
                                     <tr>
                                         <th className="border-b border-r border-blue-300 p-2 pb-4 w-[15vw] | lg:w-[8vw]">CVE-ID</th>
                                         <th className="border-b border-x border-blue-300 p-2 pb-4">Description</th>
-                                        <th className="border-b border-x border-blue-300 p-2 pb-4 w-[9vw] | sm:text-balance | lg:w-[7vw]">Base Score</th>
-                                        <th className="border-b border-x border-blue-300 p-2 pb-4 w-[9vw] | sm:text-balance | lg:w-[7vw]">Impact Score</th>
-                                        <th className="border-b border-x border-blue-300 p-2 pb-4 w-[9vw] | sm:text-balance | lg:w-[7vw]">Severity Score</th>
-                                        <th className="border-b border-l border-blue-300 p-2 pb-4 w-[4vw] | lg:w-[2vw]"></th>
+                                        <th className="border-b border-x border-blue-300 p-2 pb-4 w-[9vw] | sm:text-balance | lg:w-[6vw]">Base Score</th>
+                                        <th className="border-b border-x border-blue-300 p-2 pb-4 w-[9vw] | sm:text-balance | lg:w-[6vw]">Impact Score</th>
+                                        <th className="border-b border-x border-blue-300 p-2 pb-4 w-[9vw] | sm:text-balance | lg:w-[6vw]">Severity Score</th>
+                                        <th className="border-b border-x border-blue-300 p-2 pb-4 w-[4vw] | lg:w-[2vw]"></th>
+                                        <th className="border-b border-l border-blue-300 p-2 pb-4 w-[4vw] | lg:w-[3vw]"></th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -116,8 +128,13 @@ export default function Dashboard() {
                                             <td className={classNames((index != result.cveList.length-1)?"border-b":"","border-x border-blue-300 p-2")}>{cve.baseScore}</td>
                                             <td className={classNames((index != result.cveList.length-1)?"border-b":"","border-x border-blue-300 p-2")}>{cve.impactScore}</td>
                                             <td className={classNames((index != result.cveList.length-1)?"border-b":"","border-x border-blue-300 p-2")}>{cve.severity}</td>
-                                            <td className={classNames((index != result.cveList.length-1)?"border-b":"","border-l border-blue-300 p-2 text-4xl")}>
-                                                <div className={(severityMapping[String(cve.severity).toUpperCase()]).text}>&#9679;</div>
+                                            <td className={classNames((index != result.cveList.length-1)?"border-b":"","border-x border-blue-300 p-2 text-4xl")}>
+                                                <ExclamationTriangleIcon className={classNames(severityMapping[String(cve.severity).toUpperCase()].fill,"h-5")} />
+                                            </td>
+                                            <td className={classNames((index != result.cveList.length-1)?"border-b":"","border-l border-blue-300 p-2")}>
+                                                <input type="checkbox" name='cve' className="w-6 h-6" onChange={() => {
+                                                    update_values()
+                                                }}/>
                                             </td>
                                         </tr>
                                     )}                                  

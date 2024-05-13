@@ -10,7 +10,7 @@ def _get_history() -> list:
 
 def _add_history(new_history: dict) -> bool:
     most_recent = db.read_most_recent_history()
-    new_id = __calculate_id(most_recent['id'])
+    new_id = __calculate_id(most_recent['id'] if 'id' in most_recent.keys() else None)
     
     # update new history field
     new_history['id'] = new_id
@@ -28,6 +28,9 @@ def _search_history_id(keyword: str) -> list:
 
 
 def __calculate_id(id: str):
+    if id == None:
+        return 'A-000'
+
     letter = id[0]
     num = int(id[2:])
     

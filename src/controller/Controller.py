@@ -38,7 +38,7 @@ def add_history():
     args = request.args.to_dict()
     logging.debug(args)
 
-    if len(args) == 0:
+    if len(args) == 0:   
         abort(403)
 
     for arg in args:

@@ -1,6 +1,5 @@
 import sys
 sys.path.append('src')
-from controller.utils.ControllerUitls import cvwelibapi
 from controller.cve.CVEHelper import CVE
 import controller.cve.ScoreHelper as sh
 import controller.SearchController as sc
@@ -22,10 +21,17 @@ def _new_research(cve_id: str) -> dict:
         "secondaryWeak": weakness_counts['Secondary'],
         "score": base_score,
         "state": sh.compute_estimated_severity(base_score),
-        "cveIdList": cve_list,
+        "cveList": [__tinify_json(cve.cve_json) for cve in detailed_cve_list],
         "cveCount": len(cve_list),
         "cweCount": weakness_counts['Primary'] + weakness_counts['Secondary']
     }
+
+
+def __tinify_json(orignal: dict) -> dict:
+    out = orignal
+    out.pop('configurations', None)
+    out.pop('references', None)
+    return out
 
 
 def __get_all_relationships(cve_id: str) -> list:
