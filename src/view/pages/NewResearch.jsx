@@ -2,6 +2,7 @@ import { ArrowPathIcon } from "@heroicons/react/24/outline"
 import { useEffect, useState } from "react"
 import { api_domain } from "../utils/Utils"
 import Alert from "../components/Alert"
+import NoData from "../components/NoData"
 
 export default function NewResearch() {
 

@@ -8,7 +8,11 @@ import requests
 
 def _new_research(cve_id: str) -> dict:
     cve_list = __get_all_relationships(cve_id)
-    detailed_cve_list = [CVE(sc._get_cve_from_id(cve)) for cve in cve_list]
+    detailed_cve_list = []
+    for cve in cve_list:
+        data = sc._get_cve_from_id(cve)
+        if data != {}:
+            detailed_cve_list.append(CVE(data))
     severity_counts = __get_severity_counts(detailed_cve_list)
     weakness_counts = __get_weakness_counts(detailed_cve_list)
     base_score = sh.calculate_base_org_score(detailed_cve_list)
