@@ -115,3 +115,11 @@ a {
     }
   }
 }
+
+/* Collaspible item */
+.collapsible[show=true] {
+  height: 400px;
+}
+.collapsible[show=false] {
+  height: 0px;
+}

@@ -7,7 +7,7 @@ import controller.SearchController as sc
 import controller.HistoryController as hc
 import controller.ConvertController as cc
 import controller.NewResearchController as nc
-from controller.utils.ControllerUitls import check_cve, check_cvss
+from controller.utils.ControllerUitls import check_cve, check_cvss, check_cwe
 import logging
 
 __app = Flask("score_plus")
@@ -64,6 +64,20 @@ def update_dashboard():
         abort(403)
 
     return {'newScore': dc._update_score(data)}
+
+
+@__app.route('/api/getcwe', methods=['GET'])
+@cross_origin()
+def get_cwe():
+    args = request.args.to_dict()
+    logging.debug(args)
+
+    if len(args) == 0:
+        abort(403)
+    
+    for arg in args:
+        if arg == 'cweId':
+            return dc._get_cwe(args[arg] if check_cwe(args[arg]) else abort(400))
 
 
 @__app.route('/api/getcve', methods=['GET'])
