@@ -7,6 +7,7 @@ import controller.SearchController as sc
 import controller.HistoryController as hc
 import controller.ConvertController as cc
 import controller.NewResearchController as nc
+import model.Dao as db
 from controller.utils.ControllerUitls import check_cve, check_cvss, check_cwe
 import logging
 
@@ -61,7 +62,7 @@ def update_dashboard():
     data = request.json['list']
 
     if len(data) == 0:
-        abort(403)
+        return {'newScore':db.read_most_recent_history()['score']}
 
     return {'newScore': dc._update_score(data)}
 
