@@ -179,7 +179,7 @@ export default function Dashboard() {
                                                     </td>
                                                 </tr>
                                                 <div className="h-min w-[73.7vw] bg-primary-500 text-left text-gray-400 pt-2 px-2 mb-2 | lg:w-[61.7vw]">
-                                                        <div className="flex flex-row items-center pb-2" id={cve.id} onClick={(e) => {
+                                                        <div className="flex flex-row items-center pb-2 | hover:cursor-pointer" id={cve.id} onClick={(e) => {
                                                             toggleCollapsible(e.currentTarget.id)
                                                         }}>
                                                             <div className="flex-1 font-bold">Mitigations</div>

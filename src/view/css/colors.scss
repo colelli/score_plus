@@ -77,6 +77,19 @@
     &:focus-visible{
         color: white !important;
         background-color: var(--clr-secondary-700);
+        border-color: white !important;
+    }
+
+    &[datatype=transparent]{
+
+        color: white !important;
+        background-color: transparent;
+
+        &:hover,
+        &:focus-visible{
+            color: var(--clr-secondary-400) !important;
+            border-color: var(--clr-secondary-400) !important;
+        }
     }
 }
 
