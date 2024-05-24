@@ -92,7 +92,7 @@ export default function Dashboard() {
     }
 
     return (
-        <div className={classNames(isLoading?'h-full':'h-min', 'w-full flex flex-col gap-5 p-5 items-center justify-center')}>
+        <div className={classNames(isLoading?'h-full':'h-full', 'w-full flex flex-col gap-5 p-5 items-center justify-center')}>
             {/*Loading placeholder*/}
             {isLoading && <ArrowPathIcon className="h-32 w-32 rotate-center text-secondary-400" />}
 

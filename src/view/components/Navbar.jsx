@@ -4,7 +4,7 @@ import { BellIcon, UserGroupIcon } from '@heroicons/react/24/outline'
 import { classNames } from '../utils/Utils'
 
 
-const logo_path = "src/view/assets/score_plus_logo.svg"
+const logo_path = "/src/view/assets/score_plus_logo.svg"
 
 export default function Navbar(props) {
   return (
@@ -16,11 +16,13 @@ export default function Navbar(props) {
               <div className="relative flex h-16 items-center justify-between">
                 <div className="flex flex-1 items-center sm:items-stretch sm:justify-start">
                   <div className="flex flex-shrink-0 items-center ml-2">
-                    <img
-                      className="h-8 w-auto logo"
-                      src={logo_path}
-                      alt="Score+"
-                    />
+                    <a href='/'>
+                      <img
+                        className="h-8 w-auto logo"
+                        src={logo_path}
+                        alt="Score+"
+                      />
+                    </a>
                   </div>
                 </div>
                 <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">

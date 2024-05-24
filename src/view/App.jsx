@@ -23,7 +23,6 @@ function App() {
       <Navbar isOpen={isResearchOpen} setIsOpen={setIsResearchOpen}/>
       <main className={classNames(isResearchOpen?'blur-sm':'','bg-primary-500 h-[93vh] flex')}>
         <Sidebar/>
-        <BrowserRouter>
           <Routes>
             <Route path='/dashboard' element={<Dashboard />} />
             <Route path='/history' element={<History />} />
@@ -31,7 +30,6 @@ function App() {
             <Route path='/convert' element={<Convert />} />
             <Route path='/newresearch' element={<NewResearch/>}/>
           </Routes>
-        </BrowserRouter>
       </main>
     </div>
   )

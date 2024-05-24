@@ -2,10 +2,10 @@ import { ComputerDesktopIcon, ClipboardIcon, MagnifyingGlassIcon, ArrowPathIcon 
 import { classNames } from '../utils/Utils';
 
 const sidebar_items = [
-    {name: 'Dashboard', href: '/dashboard', icon: <ComputerDesktopIcon className='h-6 w-6' aria-hidden='true'/>, id: 'dashboard'},
-    {name: 'History', href: '/history', icon: <ClipboardIcon className='h-6 w-6' aria-hidden='true'/>, id: 'history'},
-    {name: 'Search', href: '/search', icon: <MagnifyingGlassIcon className='h-6 w-6' aria-hidden='true'/>, id: 'search'},
-    {name: 'Convert', href: '/convert', icon: <ArrowPathIcon className='h-6 w-6' aria-hidden='true'/>, id:'convert'}
+    {name: 'Dashboard', href: '/app/dashboard', icon: <ComputerDesktopIcon className='h-6 w-6' aria-hidden='true'/>, id: 'dashboard'},
+    {name: 'History', href: '/app/history', icon: <ClipboardIcon className='h-6 w-6' aria-hidden='true'/>, id: 'history'},
+    {name: 'Search', href: '/app/search', icon: <MagnifyingGlassIcon className='h-6 w-6' aria-hidden='true'/>, id: 'search'},
+    {name: 'Convert', href: '/app/convert', icon: <ArrowPathIcon className='h-6 w-6' aria-hidden='true'/>, id:'convert'}
 ]
 
 export default function Sidebar(params) {
