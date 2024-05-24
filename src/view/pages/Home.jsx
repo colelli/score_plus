@@ -1,9 +1,10 @@
-import { UserCircleIcon } from "@heroicons/react/24/outline"
 import { useEffect, useState } from "react"
 
 export default function Home() {
 
-    const logo_path = "src/view/assets/score_plus_logo.svg"
+    const logo_path = "/src/view/assets/score_plus_logo.svg"
+    const x_icon = "/src/view/assets/x.png"
+    const ig_icon = "/src/view/assets/instagram.png"
     const cve_count = 247747
     const cwe_count = 1426
 
@@ -47,26 +48,28 @@ export default function Home() {
         <div className="w-[100vw] h-[100vh] bg-primary-500 overflow-y-auto">
             <nav className="h-[7vh] w-full flex flex-row items-center px-6 py-4 gap-2 bg-primary-700 shadow-xl">
                 <div className="flex-1">
-                    <img
+                    <a href='/'>
+                      <img
                         className="h-8 w-auto logo"
                         src={logo_path}
                         alt="Score+"
-                        />
+                      />
+                    </a>
                 </div>
-                <a href="#">
+                <a href="/app/dashboard">
                     <button className="btn py-1 px-2">Sign in</button>
                 </a>
                 <a href="#">
                     <button className="btn py-1 px-2" datatype="transparent">Sign up</button>
                 </a>
             </nav>
-            <main className="w-full flex flex-col text-white font-['Arial']">
+            <main className="w-full flex flex-col text-white font-['Arial'] pb-6">
                 <div className="font-bold flex flex-col items-center justify-center w-full h-[40vh] gap-2 | lg:h-[50vh] lg:gap-4">
                     <div className="drop-shadow-md text-6xl | lg:text-8xl">Evaluate your digital</div>
                     <div className="drop-shadow-md text-5xl flex gap-2 | lg:text-7xl">awareness with<div className="font-black text-secondary-400">SCORE+</div></div>
                     <div className="font-thin italic text-lg font-['Calibri'] text-primary-200">Start your automatic risk assessment evaluation today.</div>
                     <div className="pt-7">
-                        <button className='drop-shadow-lg px-20 py-2 btn'>Start now</button>
+                        <a href="/app/dashboard"><button className='drop-shadow-lg px-20 py-2 btn'>Start now</button></a>
                     </div>
                 </div>
 
@@ -167,8 +170,36 @@ export default function Home() {
                 </div>
 
             </main>
-            <footer className="h-[20vh] bg-secondary-400">
-
+            <footer className="h-[20vh] w-full bg-secondary-400 flex flex-row space-x-2 px-2 py-4 font-['Calibri'] font-thin">
+                <div className="w-[17vw]">
+                    <img
+                        className="h-6 w-full"
+                        src={logo_path}
+                        alt="Score+"
+                        />
+                </div>
+                <div className="flex-1 border-r-2 border-blue-900/70 text-md">
+                    <ul className="pl-10">
+                        <li><a href="#" className="text-primary-700">Get Started</a></li>
+                        <li><a href="#" className="text-primary-700">Pricing</a></li>
+                        <li><a href="#" className="text-primary-700">About us</a></li>
+                        <li><a href="#" className="text-primary-700">Terms & Conditions</a></li>
+                        <li><a href="#" className="text-primary-700">F.A.Q.</a></li>
+                    </ul>
+                </div>
+                <div className="flex-1 border-r-2 border-blue-900/70 text-md">
+                    <ul className="pl-7">
+                        <li><a href="#" className="text-primary-700">Help Center</a></li>
+                        <li><a href="#" className="text-primary-700">Contact</a></li>
+                        <li><a href="#" className="text-primary-700">Privay</a></li>
+                    </ul>
+                </div>
+                <div className="flex-1 text-md">
+                    <ul className="pl-7 flex gap-2">
+                        <li><a href="#"><img src={x_icon} className="h-8"/></a></li>
+                        <li><a href="#"><img src={ig_icon} className="h-8"/></a></li>
+                    </ul>
+                </div>
             </footer>
         </div>
     )
