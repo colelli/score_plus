@@ -14,7 +14,7 @@ export default function NewResearchPopup(props) {
 
     const start_research = async () => {
         if(cve != ''){
-            location.href = '/newresearch?cveId=' + cve
+            location.href = '/app/newresearch?cveId=' + cve
         }else{
             console.log('Error during new research')
             setShowAlert(true)

@@ -21,7 +21,7 @@ export default function NewResearch() {
                     setIsError(false)
                     setShowAlert(true)
                     setTimeout(() => {
-                        location.href = '/dashboard'
+                        location.href = '/app/dashboard'
                     }, 3000)
                 }else{
                     fetch_failed()
@@ -35,7 +35,7 @@ export default function NewResearch() {
         const fetch_failed = () => {
             SetIsLoading(false) 
             setTimeout(() => {
-            location.href = '/dashboard'
+            location.href = '/app/dashboard'
             }, 3000)
         }
 
