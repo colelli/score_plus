@@ -92,6 +92,25 @@ class CVE(object):
         self.metrics = self.cve_json['metrics']
         self.weaknesses = self.cve_json['weaknesses']
 
+    def get_cvss_version(self) -> str:
+        """
+        :returns: the CVSS version
+        :raises CVEMalformedError: if version is not supported
+        :raises CVEMissingData: if the cvss version data is missing
+        """
+        vers = 3.1
+
+        try:
+            cvss_data = self.__supported_vers[vers][1](self.metrics)
+        except CVEMissingData:
+            vers = 2.0
+            cvss_data = self.__supported_vers[vers][1](self.metrics)
+
+        if 'version' in cvss_data.keys():
+            return cvss_data['version']
+        else:
+            raise CVEMissingData("Requested cvss version is missing")
+
     def get_cvss_vector(self, vers: float = 3.1) -> str:
         """
         :param vers: chosen version in format M.m (Major.minor)
