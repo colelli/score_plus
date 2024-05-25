@@ -4,7 +4,7 @@ cvwelibapi = "http://127.0.0.1:5001/api/"
 
 
 # Regex utils
-__cve_regex = r"^(CVE-)\d{4}(-)\d{4,5}$"
+__cve_regex = r"^(CVE-)\d{4}(-)\d{4,}$"
 __cwe_regex = r"^(CWE-)\d*$"
 __cvss_v31_regex = r"^(CVSS:([3][.][1])/AV:([N|A|L|P])/AC:([L|H])/PR:([N|L|H])/UI:([N|R])/S:([U|C])/C:([N|L|H])/I:([N|L|H])/A:([N|L|H]))$"
 
