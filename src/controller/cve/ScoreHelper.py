@@ -18,10 +18,13 @@ cwe_type_mapping = {
     "SECONDARY": 1,
 }
 
-__exploitability_score_max_v2 = 10.0 # obtained from: 20.0 x AV x AC x A for v2.0
+__exploitability_score_max_v2 = 10.0  # obtained from: 20.0 x AV x AC x A for v2.0
 __exploitability_score_max_v3 = 3.90  # obtained from: 8.22 x AV x AC x PR x UI for v3.1
+
 __severity_score_max = 4.0  # obtained from severity_score_mapping max value
-__impact_based_max = 6.0  # obtained from: 7.52 × (ISS - 0.029) - 3.25 × (ISS - 0.02)^15 where ISS = 1 - [ (1 - Confidentiality) × (1 - Integrity) × (1 - Availability) ]
+
+__impact_based_max_v2 = 10.0  # obtained from: 10.41 x [ 1 - (1 - Confidentiality) x (1 - Integrity) x (1 - Availability) ]
+__impact_based_max_v3 = 6.0  # obtained from: 7.52 × (ISS - 0.029) - 3.25 × (ISS - 0.02)^15 where ISS = 1 - [ (1 - Confidentiality) × (1 - Integrity) × (1 - Availability) ]
 
 
 def calculate_base_org_score(cve_list: List[CVE]) -> float:
@@ -148,9 +151,33 @@ def calculate_org_score_based_on_impact_score(cve_list: List[CVE]) -> float:
     :param cve_list: List of all the detected CVEs
     :return: Final organisation score
     """
-    # for each cve in the list we add the base score value weighted on its impact score
-    data = np.array([(cve.get_cvss_base_score() * cve.get_impact_score()) for cve in cve_list])
-    score = sum(__normalize_score(data, __impact_based_max)) / len(cve_list)
+    # for each cve we separate v2s from v3s
+    v2cves = []
+    v3cves = []
+    for cve in cve_list:
+        vers = cve.get_cvss_version()
+        if vers == '2.0':
+            v2cves.append(cve)
+        elif vers in ['3.0', '3.1']:
+            v3cves.append(cve)
+
+    datav2 = np.array([(cve.get_cvss_base_score() * cve.get_impact_score()) for cve in v2cves])
+    datav3 = np.array([(cve.get_cvss_base_score() * cve.get_impact_score()) for cve in v3cves])
+    scorev2 = (sum(__normalize_score(datav2, __impact_based_max_v2)) / len(datav2)) if len(datav2) != 0 else None
+    scorev3 = (sum(__normalize_score(datav3, __impact_based_max_v3)) / len(datav3)) if len(datav3) != 0 else None
+
+    # calculate final score
+    if scorev2 == None and scorev3 == None:
+        return round(0, 2)
+
+    score = None
+    if scorev2 == None:
+        score = scorev3
+    elif scorev3 == None:
+        score = scorev2
+    else:
+        score = (scorev2 + scorev3) / 2
+
     return round(score, 2)
 
 
