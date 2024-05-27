@@ -84,8 +84,8 @@ export default function History() {
                                                     <td className={classNames((index != result.history.length-1) ? "border-b" : "", "border-r border-blue-300 p-2")}>{entry.id}</td>
                                                     <td className={classNames((index != result.history.length-1) ? "border-b" : "", "border-r border-blue-300 p-2")}>{new Date(entry.date).toLocaleDateString()}</td>
                                                     <td className={classNames((index != result.history.length-1) ? "border-b" : "", "border-x border-blue-300 p-2")}>{entry.score}</td>
-                                                    <td className={classNames((index != result.history.length-1) ? "border-b" : "", "border-x border-blue-300 p-2")}>{entry.cve_count}</td>
-                                                    <td className={classNames((index != result.history.length-1) ? "border-b" : "", "border-x border-blue-300 p-2")}>{entry.cwe_count}</td>
+                                                    <td className={classNames((index != result.history.length-1) ? "border-b" : "", "border-x border-blue-300 p-2")}>{entry.cveCount}</td>
+                                                    <td className={classNames((index != result.history.length-1) ? "border-b" : "", "border-x border-blue-300 p-2")}>{entry.cweCount}</td>
                                                     <td className={classNames((index != result.history.length-1) ? "border-b" : "", "border-x border-blue-300 p-2")}>{entry.state}</td>
                                                     <td className={classNames((index != result.history.length-1) ? "border-b" : "", "border-l border-blue-300 p-2 text-secondary-400")}><ArrowTopRightOnSquareIcon className="h-5" /></td>
                                                 </tr>

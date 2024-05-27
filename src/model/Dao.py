@@ -7,14 +7,31 @@ import time
 __DEFAULT_PATH = 'src/model/files/'
 __HISTORY_DATA = 'HISTORY.json'
 
-def read_history() -> list:
+def read_history(order: int = 1) -> list:
     """
         Desc:
             Retrieves the saved HISTORY DATA file. If no file is found,
             it creates a new empty list
+        Params:
+            order: 0 - ascending, 1 - descending
         Returns:
             A list containing all the fetched history data
     """
+    data  = __get_file()
+    match order:
+        case 0:
+            # ascending - do nothing
+            if len(data) > 0 and data != []:
+                return sorted(data, key=__sort_by_date)
+        case 1:
+            # descending
+            if len(data) > 0 and data != []:
+                return list(reversed(sorted(data, key=__sort_by_date)))
+        case _:
+            raise ValueError('Invalid requested order')
+
+
+def __get_file() -> list:
     data = []
     try:
         data = get_json_from_file(__HISTORY_DATA, __DEFAULT_PATH)
@@ -30,9 +47,9 @@ def read_most_recent_history() -> dict:
         Returns:
             A dict representing the most recent history element
     """
-    curr_data = read_history()
-    if len(curr_data) > 0 and curr_data != {}:
-        curr_data.sort(key=__sort_by_date) 
+    curr_data = __get_file()
+    if len(curr_data) > 0 and curr_data != []:
+        curr_data.sort(key=__sort_by_date)
         return curr_data[-1]
     return {}
 
@@ -47,7 +64,7 @@ def add_history(new_history: dict) -> bool:
             True if the file is saved successfully, else False
     """
     try:
-        curr_data = read_history()
+        curr_data = __get_file()
         curr_data.append(new_history)
         save_to_json_file(curr_data, __HISTORY_DATA, __DEFAULT_PATH)
     except FileNotFoundError:
@@ -57,3 +74,5 @@ def add_history(new_history: dict) -> bool:
 
 def __sort_by_date(e):
     return time.mktime(time.strptime(e['date'], '%Y-%m-%d %H:%M:%S.%f'))
+
+print(type(read_history()))
