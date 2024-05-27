@@ -44,14 +44,26 @@ def __retrieve_cwe_data(cwe_id: str) -> dict:
     return {}
 
 
-def _update_score(excluded_list: list) -> float:
+def _update_score(excluded_list: list, mode: int) -> float:
     most_recent = db.read_most_recent_history()
     
     # Construct relevant cve list
     relevant_cves = []
     for cve_json in most_recent['cveList']:
         cve = CVE(cve_json)
-        if cve.cve_id not in excluded_list:
+        if cve.cve_id not in excluded_list and cve.get_cwes:
             relevant_cves.append(cve)
-    
-    return sh.calculate_base_org_score(relevant_cves)
+
+    match mode:
+        case 0:
+            return sh.calculate_base_org_score(relevant_cves)
+        case 1:
+            return sh.calculate_org_score_based_on_impact_score(relevant_cves)
+        case 2:
+            return sh.calculate_org_score_based_on_exploitability(relevant_cves)
+        case 3:
+            return sh.calculate_org_score_based_on_severity(relevant_cves)
+        case 4:
+            return sh.calculate_org_score_based_on_cwes(relevant_cves)
+        case _:
+            raise ValueError('Invalid mode selected')

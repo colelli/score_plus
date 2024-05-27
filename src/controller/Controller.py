@@ -60,11 +60,9 @@ def get_dashboard():
 @cross_origin()
 def update_dashboard():
     data = request.json['list']
+    mode = request.json['mode']
 
-    if len(data) == 0:
-        return {'newScore':db.read_most_recent_history()['score']}
-
-    return {'newScore': dc._update_score(data)}
+    return {'newScore': dc._update_score(data, mode)}
 
 
 @__app.route('/api/getcwe', methods=['GET'])

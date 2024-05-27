@@ -15,7 +15,7 @@ def _new_research(cve_id: str) -> dict:
             detailed_cve_list.append(CVE(data))
     severity_counts = __get_severity_counts(detailed_cve_list)
     weakness_counts = __get_weakness_counts(detailed_cve_list)
-    base_score = sh.calculate_base_org_score(detailed_cve_list)
+    base_score = sh.calculate_org_score_based_on_exploitability(detailed_cve_list)
     return {
         "criticalVuln": severity_counts['CRITICAL'],
         "highVuln": severity_counts['HIGH'],
