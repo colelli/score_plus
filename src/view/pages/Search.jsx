@@ -23,8 +23,6 @@ export default function Search() {
         try{
             const response = await fetch(api_domain + "/api/getcve?cveId=" + cve_id)
             const data = await response.json()
-            console.log(response)
-            console.log(data)
 
             SetFetchedData(true)
             SetDescVisible(false)

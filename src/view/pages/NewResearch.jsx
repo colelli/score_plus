@@ -40,7 +40,6 @@ export default function NewResearch() {
         }
 
         const cveId = location.href.split('?')[1].split('=')[1]
-        console.log('ciao')
         fetch_data(cveId)
     },[])
 

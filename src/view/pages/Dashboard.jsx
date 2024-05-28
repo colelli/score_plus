@@ -21,8 +21,6 @@ export default function Dashboard() {
         try{
             const response = await fetch(api_domain + "/api/getdashboard")
             const data = await response.json()
-            console.log(response)
-            console.log(data)
 
             SetResult(data)
             SetOverallScore(data.score.toFixed(1))
@@ -46,13 +44,53 @@ export default function Dashboard() {
         get_dashboard()
     }, [])
 
+    //checkboxes and updating logic
+    let solvedCWEs = [];
     let values = [];
-    const update_values = async () => {
-        let checkboxes = document.querySelectorAll('input[name="cve"]:checked');
-        values = [];
-        checkboxes.forEach(checkbox => {
-            values.push(checkbox.id)
+    const update_values = async (e) => {
+        let checkedBoxes = document.querySelectorAll('input[name="cve"]:checked');
+        let checkedIds = []
+        checkedBoxes.forEach(val => checkedIds.push(val.id))
+        let allBoxes = document.querySelectorAll('input[name="cve"]');
+        solvedCWEs = [];
+
+        checkedBoxes.forEach(box => {
+            //cycle through every checked box
+            let ignoreMe = [];
+            result.cveList.forEach(cve => {
+                //cycle through all cves
+                if(!e.target.checked && cve.id == e.target.id && checkedIds.every(val => val != e.target.id)){
+                    cve.cwes.forEach(cwe => {
+                        ignoreMe.push(cwe.id)
+                        solvedCWEs.filter(val => val != cwe.id)
+                    })
+                }else if(cve.id == box.id){
+                    cve.cwes.forEach(cwe => {
+                        if(!ignoreMe.includes(cwe.id)){
+                            solvedCWEs.push(cwe.id)
+                        }
+                    })
+                }
+
+            })
         })
+
+        values = []
+        allBoxes.forEach(checkbox => {
+            checkbox.checked = false;
+            result.cveList.forEach(cve => {
+                if(cve.id == checkbox.id){
+                    if(cve.cwes.every(val => solvedCWEs.includes(val.id))){
+                        checkbox.checked = true;
+                        values.push(checkbox.id);
+                    }else{
+                        checkbox.checked = false;
+                        values.filter(val => val != checkbox.id);
+                    }
+                }
+            })
+        })
+
         try{
             const newScore = await fetch(api_domain + '/api/updatedashboard',{
                 method: 'POST',
@@ -63,13 +101,13 @@ export default function Dashboard() {
                 })
             })
             const data = await newScore.json()
-            console.log(data)
             SetOverallScore(data.newScore.toFixed(1))
         }catch{
             notify_error();
         }
     }
 
+    //mitigations
     const toggleCollapsible = (cveId) => {
         let item = document.querySelector('div[id="collapsible-' + cveId + '"]')
         let target = document.querySelector('div[id="' + cveId + '"]')
@@ -149,9 +187,9 @@ export default function Dashboard() {
                                 <div className="flex flex-row gap-6 w-full | lg:flex-col lg:gap-2">
                                     {modes.map(
                                         (mode) =>
-                                        <div className="flex gap-1 w-max h-6 items-center">
-                                            <input type="radio" value={mode} name='mode' checked={mode == selectedRadioBtn} onChange={() => SetSelectedRadioBtn(mode)}/>
-                                            <label className={(mode == selectedRadioBtn)?'text-secondary-400 font-bold':''}>{mode}</label>
+                                        <div className="flex gap-1 w-max h-6 items-center" onClick={() => SetSelectedRadioBtn(mode)}>
+                                            <input className='hover:cursor-pointer' type="radio" value={mode} name='mode' checked={mode == selectedRadioBtn} onChange={() => SetSelectedRadioBtn(mode)}/>
+                                            <label className={classNames((mode == selectedRadioBtn)?'text-secondary-400 font-bold':'','hover:cursor-pointer')}>{mode}</label>
                                         </div>
                                     )}
                                 </div>
@@ -176,7 +214,7 @@ export default function Dashboard() {
                                     {result.cveList.map(
                                         (cve, index) =>
                                             <>
-                                                <tr className="h-[9vh]" onClick={() => {console.log("show mitigations")}}>
+                                                <tr className="h-[9vh]">
                                                     {/*TO-DO: Add data fetch*/}
                                                     <td className={classNames((index != result.cveList.length-1)?"border-b":"","border-r border-blue-300 p-2")}>
                                                         <a href={"https://nvd.nist.gov/vuln/detail/" + cve.id} target="_blank" rel="noopener noreferrer">{cve.id}</a>
@@ -193,8 +231,8 @@ export default function Dashboard() {
                                                         <ExclamationTriangleIcon className={classNames(severityMapping[String(cve.severity).toUpperCase()].fill,"h-5")} />
                                                     </td>
                                                     <td className={classNames((index != result.cveList.length-1)?"border-b":"","border-l border-blue-300 p-2")}>
-                                                        <input type="checkbox" name='cve' className="w-6 h-6" onChange={() => {
-                                                            update_values()
+                                                        <input type="checkbox" name='cve' className="w-6 h-6" onChange={(e) => {
+                                                            update_values(e)
                                                         }} id={cve.id}/>
                                                     </td>
                                                 </tr>

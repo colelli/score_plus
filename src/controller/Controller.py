@@ -62,7 +62,8 @@ def update_dashboard():
     data = request.json['list']
     mode = request.json['mode']
 
-    return {'newScore': dc._update_score(data, mode)}
+    score, checked_ids = dc._update_score(data, mode)
+    return {'newScore': score, 'checkedIds': checked_ids}
 
 
 @__app.route('/api/getcwe', methods=['GET'])

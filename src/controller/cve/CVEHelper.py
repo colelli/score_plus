@@ -219,6 +219,16 @@ class CVE(object):
         for cwe in self.weaknesses:
             output.append((str((cwe['description'][0])['value']), str(cwe['type'])))
         return output
+    
+    def get_cwe_ids(self) -> List[str]:
+        """
+        Retrieves the CVE CVSS weaknesses id list.
+        :return: A list of CWE IDs
+        """
+        output = []
+        for cwe in self.weaknesses:
+            output.append(str((cwe['description'][0])['value']))
+        return output
 
     def check_mandatory(self):
         """
