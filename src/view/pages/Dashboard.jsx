@@ -48,6 +48,7 @@ export default function Dashboard() {
     let solvedCWEs = [];
     let values = [];
     const update_values = async (e) => {
+        console.log(e.target.id)
         let checkedBoxes = document.querySelectorAll('input[name="cve"]:checked');
         let checkedIds = []
         checkedBoxes.forEach(val => checkedIds.push(val.id))
@@ -60,13 +61,18 @@ export default function Dashboard() {
             result.cveList.forEach(cve => {
                 //cycle through all cves
                 if(!e.target.checked && cve.id == e.target.id && checkedIds.every(val => val != e.target.id)){
+                    console.log('uncheck')
                     cve.cwes.forEach(cwe => {
+                        console.log(cwe.id)
                         ignoreMe.push(cwe.id)
                         solvedCWEs.filter(val => val != cwe.id)
+                        console.log(solvedCWEs)
                     })
                 }else if(cve.id == box.id){
                     cve.cwes.forEach(cwe => {
+                        console.log(!ignoreMe.includes(cwe.id))
                         if(!ignoreMe.includes(cwe.id)){
+                            console.log('bastardo:'+cwe.id)
                             solvedCWEs.push(cwe.id)
                         }
                     })
@@ -143,7 +149,7 @@ export default function Dashboard() {
             {Object.keys(result).length != 0 &&
                 <>
                     <div className="w-full flex justify-center drop-shadow-[7px_7px_10px_rgba(0,0,0,0.35)] text-secondary-100 font-black text-md | sm:text-6xl">DASHBOARD</div>
-                    <div className="flex flex-1 gap-5 flex-col lg:flex-row overflow-y-auto">
+                    <div className="flex flex-1 gap-5 flex-col lg:flex-row overflow-hidden">
                         
                         {/*Dashboard Summary Card*/}
                         <div className="flex flex-col gap-4">
