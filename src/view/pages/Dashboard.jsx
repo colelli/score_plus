@@ -56,29 +56,30 @@ export default function Dashboard() {
         solvedCWEs = [];
 
         checkedBoxes.forEach(box => {
+            
             //cycle through every checked box
             let ignoreMe = [];
             result.cveList.forEach(cve => {
                 //cycle through all cves
                 if(!e.target.checked && cve.id == e.target.id && checkedIds.every(val => val != e.target.id)){
-                    console.log('uncheck')
                     cve.cwes.forEach(cwe => {
-                        console.log(cwe.id)
                         ignoreMe.push(cwe.id)
-                        solvedCWEs.filter(val => val != cwe.id)
-                        console.log(solvedCWEs)
                     })
-                }else if(cve.id == box.id){
+                }
+            })
+
+            result.cveList.forEach(cve => {
+                //cycle through all cves
+                if(cve.id == box.id){
                     cve.cwes.forEach(cwe => {
                         console.log(!ignoreMe.includes(cwe.id))
                         if(!ignoreMe.includes(cwe.id)){
-                            console.log('bastardo:'+cwe.id)
                             solvedCWEs.push(cwe.id)
                         }
                     })
                 }
-
             })
+
         })
 
         values = []
