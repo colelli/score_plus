@@ -48,7 +48,6 @@ export default function Dashboard() {
     let solvedCWEs = [];
     let values = [];
     const update_values = async (e) => {
-        console.log(e.target.id)
         let checkedBoxes = document.querySelectorAll('input[name="cve"]:checked');
         let checkedIds = []
         checkedBoxes.forEach(val => checkedIds.push(val.id))
