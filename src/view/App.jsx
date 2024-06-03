@@ -12,6 +12,7 @@ import NewResearch from './pages/NewResearch'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { useState } from 'react'
 import { classNames } from './utils/Utils'
+import UserProfile from './pages/UserProfile'
 
 function App() {
 
@@ -24,6 +25,7 @@ function App() {
       <main className={classNames(isResearchOpen?'blur-sm':'','bg-primary-500 h-[93vh] flex')}>
         <Sidebar/>
           <Routes>
+            <Route path='/user' element={<UserProfile />} />
             <Route path='/dashboard' element={<Dashboard />} />
             <Route path='/history' element={<History />} />
             <Route path='/search' element={<Search />} />
