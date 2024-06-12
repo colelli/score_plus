@@ -9,13 +9,15 @@ import requests
 def _new_research(cve_id: str) -> dict:
     cve_list = __get_all_relationships(cve_id)
     detailed_cve_list = []
-    for cve in cve_list:
+    for cve in cve_list.keys():
         data = sc._get_cve_from_id(cve)
         if data != {}:
+            data['assetIds'] = cve_list[data['id']]
             detailed_cve_list.append(CVE(data))
     severity_counts = __get_severity_counts(detailed_cve_list)
     weakness_counts = __get_weakness_counts(detailed_cve_list)
-    base_score = sh.calculate_org_score_based_on_exploitability(detailed_cve_list)
+    # base_score = sh.calculate_org_score_based_on_exploitability(detailed_cve_list)
+    base_score = sh.calculate_org_score_based_on_assets(detailed_cve_list)
     return {
         "criticalVuln": severity_counts['CRITICAL'],
         "highVuln": severity_counts['HIGH'],
@@ -25,24 +27,38 @@ def _new_research(cve_id: str) -> dict:
         "secondaryWeak": weakness_counts['Secondary'],
         "score": base_score,
         "state": sh.compute_estimated_severity(base_score),
-        "cveList": [__tinify_json(cve.cve_json) for cve in detailed_cve_list],
+        "cveList": [__tinify_json(cve.cve_json, cve_list[cve.cve_id]) for cve in detailed_cve_list],
         "cveCount": len(cve_list),
         "cweCount": weakness_counts['Primary'] + weakness_counts['Secondary']
     }
 
 
-def __tinify_json(orignal: dict) -> dict:
+def __tinify_json(orignal: dict, assets: list) -> dict:
     out = orignal
     out.pop('configurations', None)
     out.pop('references', None)
     return out
 
 
-def __get_all_relationships(cve_id: str) -> list:
+def __get_all_relationships(cve_id: str) -> dict:
     # TO-DO: request to third-party API
-    cve_list = ['CVE-2014-3757','CVE-2018-16659','CVE-2018-2925','CVE-2006-3414','CVE-2021-30303',
-                'CVE-2010-3686','CVE-2020-23912','CVE-2024-0007','CVE-2024-1011','CVE-2012-1297',
-                'CVE-2012-1947','CVE-2008-1515','CVE-2017-15425','CVE-2017-18158','CVE-2010-3685']
+    cve_list = {
+        'CVE-2014-3757':['A0008', 'A0012'],
+        'CVE-2018-16659':['A0012'],
+        'CVE-2018-2925':['A0006'],
+        'CVE-2006-3414':['A0008'],
+        'CVE-2021-30303':['A0005', 'A0011'],
+        'CVE-2010-3686':['A0012'],
+        'CVE-2020-23912':['A0008', 'A0014'],
+        'CVE-2024-0007':['A0007', 'A0012'],
+        'CVE-2024-1011':['A0008', 'A0012'],
+        'CVE-2012-1297':['A0008'],
+        'CVE-2012-1947':[],
+        'CVE-2008-1515':[],
+        'CVE-2017-15425':['A0008', 'A0012'],
+        'CVE-2017-18158':[],
+        'CVE-2010-3685':['A0008', 'A0012']
+    }
     return cve_list
 
 

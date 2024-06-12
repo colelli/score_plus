@@ -72,6 +72,7 @@ class CVE(object):
         # optional data
         self.metrics = {}
         self.weaknesses = []
+        self.assetIds = []
 
         self.parse_json()
 
@@ -91,6 +92,9 @@ class CVE(object):
         self.descriptions = self.cve_json['descriptions']
         self.metrics = self.cve_json['metrics']
         self.weaknesses = self.cve_json['weaknesses']
+
+        if 'assetIds' in self.cve_json.keys():
+            self.assetIds = self.cve_json['assetIds']
 
     def get_cvss_version(self) -> str:
         """

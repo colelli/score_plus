@@ -13,6 +13,22 @@ def read_assets() -> list:
     return __get_file(__ASSETS_DATA)
 
 
+def update_asset_score(asset_id: str, score: float) -> bool:
+    data = __get_file(__ASSETS_DATA)
+    for asset in data:
+        if asset['id'] == asset_id:
+            asset['score'] = score
+            return True
+    return False
+
+
+def get_asset_weight(asset_id: str) -> float:
+    data = __get_file(__ASSETS_DATA)
+    for asset in data:
+        if asset['id'] == asset_id:
+            return asset['score']
+
+
 def read_history(order: int = 1) -> list:
     """
         Desc:
@@ -80,4 +96,3 @@ def add_history(new_history: dict) -> bool:
 
 def __sort_by_date(e):
     return time.mktime(time.strptime(e['date'], '%Y-%m-%d %H:%M:%S.%f'))
-
