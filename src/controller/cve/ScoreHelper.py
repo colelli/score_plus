@@ -1,6 +1,7 @@
 import sys
 sys.path.append('src')
 import numpy as np
+import model.Dao as db
 from typing import List
 from controller.cve.CVEHelper import CVE
 from controller.cvss.CVSSHelper import CVSSv31Tov4
@@ -204,6 +205,32 @@ def calculate_org_score_based_on_cwes(cve_list: List[CVE], mode: str = 'count') 
         score = __score_based_on_cwe_type(cve_list)
     else:
         score = (__score_based_on_cwe_count(cve_list) + __score_based_on_cwe_type(cve_list)) / 2
+    return round(score, 2)
+
+
+def calculate_org_score_based_on_assets(cve_list: List[CVE]):
+    """
+    Description:
+        Calculates the final organisation score based on the following criteria:\n
+        The score is the weighted average of all the base scores multiplied by their respective asset weights (declared by the user).
+        The assets may, or many not, be related to all or none of the previously mentioned CVEs. The final score takes into consideration
+        only the vulnerabilities which include asset identifiers. Those not matching such criteria are excluded from the final score, therefore
+        it might result into a relatively low-reliability score indication.
+    :param cve_list: List of all the detected CVEs
+    :return: Final organisation score
+    """
+    # for each cve in the list we add the base score value weighted on its respective assets values score mapping
+    data = np.array([])
+    skipped_vulns = 0
+
+    for cve in cve_list:
+        if len(cve.assetIds) == 0:
+            skipped_vulns += 1
+            continue
+        partial = np.array([(cve.get_cvss_base_score() * db.get_asset_weight(asset_id)) for asset_id in cve.assetIds])
+        data = np.append(data, sum(partial)/len(cve.assetIds))
+
+    score = sum(data) / (len(cve_list) - skipped_vulns)
     return round(score, 2)
 
 
