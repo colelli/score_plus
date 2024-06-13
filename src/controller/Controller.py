@@ -2,11 +2,13 @@ from flask import Flask, request, abort
 from flask_cors import CORS, cross_origin
 import sys
 sys.path.append('src')
+import os
 import controller.DashboardController as dc
 import controller.SearchController as sc
 import controller.HistoryController as hc
 import controller.ConvertController as cc
 import controller.NewResearchController as nc
+import controller.UserProfileController as uc
 import model.Dao as db
 from controller.utils.ControllerUitls import check_cve, check_cvss, check_cwe
 import logging
@@ -130,4 +132,20 @@ def get_cvss_data():
     abort(400) # No matching function found
 
 
-__app.run(port=7777)
+@__app.route('/api/getassets', methods=['GET'])
+@cross_origin()
+def get_assets():
+    return uc._get_assets()
+
+
+@__app.route('/api/updateassets', methods=['POST'])
+@cross_origin()
+def update_assets():
+    data = request.json['assets']
+    return uc._update_assets(data)
+
+
+# App start up
+if __name__ == "__main__":
+    port = int(os.environ.get('PORT', 7777))
+    __app.run(host='0.0.0.0', port=port, debug=True)

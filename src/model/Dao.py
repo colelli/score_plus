@@ -18,6 +18,7 @@ def update_asset_score(asset_id: str, score: float) -> bool:
     for asset in data:
         if asset['id'] == asset_id:
             asset['score'] = score
+            save_to_json_file(data,__ASSETS_DATA, __DEFAULT_PATH)
             return True
     return False
 
