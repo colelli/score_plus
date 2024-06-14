@@ -230,7 +230,7 @@ def calculate_org_score_based_on_assets(cve_list: List[CVE]):
         partial = np.array([(cve.get_cvss_base_score() * db.get_asset_weight(asset_id)) for asset_id in cve.assetIds])
         data = np.append(data, sum(partial)/len(cve.assetIds))
 
-    score = sum(data) / (len(cve_list) - skipped_vulns)
+    score = (sum(data) / (len(cve_list) - skipped_vulns)) if len(cve_list) - skipped_vulns != 0 else 0
     return round(score, 2)
 
 
