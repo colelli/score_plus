@@ -26,6 +26,24 @@ export const severityMapping = {
     }
 }
 
+export const cweExploitabilityMapping = {
+    "HIGH": {
+        text: "text-red-500",
+        bg: "bg-red-500/40",
+        fill: "fill-red-500"
+    },
+    "MEDIUM": {
+        text: "text-yellow-500",
+        bg: "bg-yellow-500/45",
+        fill: "fill-yellow-500"
+    },
+    "LOW": {
+        text: "text-green-500",
+        bg: "bg-green-500/40",
+        fill: "fill-green-500"
+    }
+}
+
 export const api_domain = 'http://127.0.0.1:7777'
 
 export function classNames(...classes) {

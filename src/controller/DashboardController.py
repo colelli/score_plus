@@ -29,13 +29,20 @@ def __get_cwe(cwe_id: str) -> dict:
 
 def __retrieve_cve_data(cve_json: dict):
     cve_data = CVE(cve_json)
+    data = [__retrieve_cwe_data(id[0]) for id in cve_data.get_cwes()]
+    if cve_data.cve_id == 'CVE-2008-1515':
+        print(cve_data.get_cwe_ids())
+
+    for inner in data:
+        if inner == {}:
+            data.remove(inner)
     return {
         'id': cve_data.cve_id,
         'desc': cve_data.descriptions[0]['value'],
         'baseScore': cve_data.get_cvss_base_score(),
         'impactScore': cve_data.get_impact_score(),
         'severity': cve_data.get_cvss_severity(),
-        'cwes': [__retrieve_cwe_data(id[0]) for id in cve_data.get_cwes()]
+        'cwes': data
     }
 
 
@@ -74,5 +81,9 @@ def _update_score(excluded_list: list, mode: int) -> tuple[float, list]:
             return (sh.calculate_org_score_based_on_severity(relevant_cves), checked_cves)
         case 4:
             return (sh.calculate_org_score_based_on_cwes(relevant_cves), checked_cves)
+        case 5:
+            return (sh.calculate_org_score_based_on_assets(relevant_cves), checked_cves)
         case _:
             raise ValueError('Invalid mode selected')
+        
+_get_dashboard()
