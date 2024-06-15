@@ -48,13 +48,15 @@ export default function Dashboard() {
     //checkboxes and updating logic
     let solvedCWEs = [];
     let values = [];
-    const update_values = async (e) => {
+    const update_values_cve = async (e) => {
+        //Get all checked CVE boxes
         let checkedBoxes = document.querySelectorAll('input[name="cve"]:checked');
         let checkedIds = []
         checkedBoxes.forEach(val => checkedIds.push(val.id))
-        let allBoxes = document.querySelectorAll('input[name="cve"]');
-        solvedCWEs = [];
 
+        //Get all CVE boxes, excluded the disabled ones
+        let allBoxes = document.querySelectorAll('input[name="cve"]:not(:disabled)');
+        solvedCWEs = [];
         checkedBoxes.forEach(box => {
 
             //check if unchecked for ignore list
@@ -100,6 +102,31 @@ export default function Dashboard() {
             })
         })
 
+        update_values();
+
+    }
+
+    const update_values_cwe = async (e) => {
+        //Get alla checked CWE boxes
+        let checkedBoxes = document.querySelectorAll('input[name="cwe"]:checked');
+        solvedCWEs = []
+        checkedBoxes.forEach(val => solvedCWEs.push(val.id))
+
+        values = []
+        result.cveList.forEach(cve => {
+            if(cve.cwes.every(val => solvedCWEs.includes(val.id)) && cve.cwes.length != 0){
+                values.push(cve.id);
+            }else{
+                values.filter(val => val != cve.id);
+            }
+        })
+
+        console.log(values);
+        update_values();
+
+    }
+
+    const update_values = async () => {
         try{
             const newScore = await fetch(api_domain + '/api/updatedashboard',{
                 method: 'POST',
@@ -120,7 +147,7 @@ export default function Dashboard() {
     const modes = ['Basic', 'Impact', 'Exploitability', 'Severity', 'CWE', 'Assets']
     const [selectedRadioBtn, SetSelectedRadioBtn] = useState(modes[2])
     useEffect(() => {
-        update_values()
+        update_values_cve()
     }, [selectedRadioBtn])
 
     // Table mode
@@ -198,8 +225,8 @@ export default function Dashboard() {
 
                             {/*Dashboard Table*/}
                             <div className="h-[80vh] max-h-full text-secondary-100 items-start p-1 flex flex-1 rounded-md bg-primary-400 overflow-y-auto overflow-x-hidden | sm:w-full | lg:w-auto">
-                                {isCVETableStyle && <CVETable result={result} update_values={update_values}/>}
-                                {!isCVETableStyle && <CWETable result={result} update_values={update_values}/>}
+                                {isCVETableStyle && <CVETable result={result} update_values={update_values_cve}/>}
+                                {!isCVETableStyle && <CWETable result={result} update_values={update_values_cwe}/>}
                             </div>
                         </div>
                 
@@ -266,7 +293,7 @@ function CVETable(props){
                                 <tr className="h-[9vh]">
                                     {/*TO-DO: Add data fetch*/}
                                     <td className={classNames((index != props.result.cveList.length-1)?"border-b":"","border-r border-blue-300 p-2")}>
-                                        <a href={"https://nvd.nist.gov/vuln/detail/" + cve.id} target="_blank" rel="noopener noreferrer">{cve.id}</a>
+                                        <a href={"https://nvd.nist.gov/vuln/detail/" + cve.id} target="_blank" rel="noopener noreferrer" className="hover:!text-blue-400">{cve.id}</a>
                                     </td>
                                     <td className={classNames((index != props.result.cveList.length-1)?"border-b":"","border-x border-blue-300 p-2")}>
                                         <div className="text-left line-clamp-3" title={cve.desc}>
@@ -282,7 +309,7 @@ function CVETable(props){
                                     <td className={classNames((index != props.result.cveList.length-1)?"border-b":"","border-l border-blue-300 p-2")}>
                                         <input type="checkbox" name='cve' className="w-6 h-6" onChange={(e) => {
                                             props.update_values(e)
-                                        }} id={cve.id}/>
+                                        }} id={cve.id} disabled={(cve.cwes.length == 0)?true:false}/>
                                     </td>
                                 </tr>
                                 {checkMitigations(cve) &&
@@ -296,12 +323,12 @@ function CVETable(props){
                                         <div className='collapsible ease-in-out duration-300 overflow-auto' id={'collapsible-' + cve.id} show='false'>
                                             
                                             {/* Mitigations infoboxes */}
+                                            {console.log(cve.id, cve.cwes)}
                                             {cve.cwes.length != 0 && cve.cwes.map (
                                                 (cwe) => 
                                                     {return cwe!= null && Object.keys(cwe).length != 0 && 
                                                         <div className="w-full h-full pr-2">
                                                             <div className="text-2xl text-white font-bold pb-6">{cwe.id} - {cwe.name}</div>
-                                                                {console.log(cve)}
                                                                 {cwe.mitigations.map(
                                                                     (mit) =>
                                                                         <div className="flex flex-col gap-6">
@@ -399,7 +426,9 @@ function CWETable(props){
                             {return Object.keys(cwe).length != 0 &&
                                 <>
                                     <tr className="h-[6vh]">
-                                        <td className={classNames((index != cweList.length-1)?"border-b":"","border-r border-blue-300 p-2 text-white")}>{cwe.id}</td>
+                                        <td className={classNames((index != cweList.length-1)?"border-b":"","border-r border-blue-300 p-2 text-white")}>
+                                            <a href={"https://cwe.mitre.org/data/definitions/"+(cwe.id).split('-')[1]+".html"} target="_blank" rel="noopener noreferrer" className="hover:!text-blue-400">{cwe.id}</a>
+                                        </td>
                                         <td className={classNames((index != cweList.length-1)?"border-b":"","border-x border-blue-300 p-2")}>
                                             <div className="text-left line-clamp-1" title={cwe.name}>
                                                 {cwe.name}
@@ -413,7 +442,10 @@ function CWETable(props){
                                         <td className={classNames((index != cweList.length-1)?"border-b":"","border-x border-blue-300 p-2")}>
                                             <ExclamationTriangleIcon className={classNames((cwe.exploitability == null)?'fill-grey-500':cweExploitabilityMapping[String(cwe.exploitability).toUpperCase()].fill,"h-5")} />
                                         </td>
-                                        <td className={classNames((index != cweList.length-1)?"border-b":"","border-l border-blue-300 p-2")}><input type="checkbox" className="w-6 h-6"/></td>
+                                        <td className={classNames((index != cweList.length-1)?"border-b":"","border-l border-blue-300 p-2")}>
+                                            <input type="checkbox" name="cwe" className="w-6 h-6" onChange={(e) => {
+                                            props.update_values(e)}} id={cwe.id}/>
+                                        </td>
                                     </tr>
                                     <div className="h-min w-[73.7vw] bg-primary-500 text-left text-gray-400 pt-2 px-2 mb-2 | lg:w-[61.7vw]">
                                         <div className="flex flex-row items-center pb-2 | hover:cursor-pointer" id={cwe.id} onClick={(e) => {
@@ -429,7 +461,7 @@ function CWETable(props){
                                                 cve => {
                                                     return cve.cwes.map(
                                                         entry => {return entry.id == cwe.id &&
-                                                            <div className="py-2 rounded | hover:bg-blue-400 hover:!text-white hover:cursor-pointer">
+                                                            <div className="py-2 rounded | hover:bg-blue-400 hover:!text-white hover:cursor-pointer" onClick={() => location.href = '/app/search?cveId=' + cve.id}>
                                                                 <InfoBox boxTitle={cve.id} text={cve.desc} format={false} />
                                                             </div>
                                                     })

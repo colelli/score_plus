@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { classNames, camelCaseToString, severityMapping, api_domain } from "../utils/Utils"
 import { MagnifyingGlassIcon, ArrowPathIcon } from "@heroicons/react/24/outline"
 import NoData from "../components/NoData"
@@ -14,15 +14,22 @@ export default function Convert() {
     const [fetchedData, SetFetchedData] = useState(false)
     const [isDescVisible, SetDescVisible] = useState(true)
 
+    useEffect(() => {
+        const cvss = location.href.split('?')[1]?.split('=')[1]
+        if(cvss != '' && cvss != null){
+            convert_cvss(cvss)
+        }
+    },[])
+
     const [vectorString, SetVectorString] = useState('')
-    const convert_cvss = async () => {
+    const convert_cvss = async (cvss) => {
         SetIsLoading(true)
         try{
-            const v4Response = await fetch(api_domain + "/api/convertcvss?vector=" + vectorString)
+            const v4Response = await fetch(api_domain + "/api/convertcvss?vector=" + cvss)
             const v4Data = await v4Response.json()
             console.log(v4Data)
 
-            const originalRresponse = await fetch(api_domain + "/api/cvssdata?vector=" + vectorString)
+            const originalRresponse = await fetch(api_domain + "/api/cvssdata?vector=" + cvss)
             const originalData = await originalRresponse.json()
             console.log(originalData)
 
@@ -61,7 +68,7 @@ export default function Convert() {
                 <div className="flex flex-row gap-5 rounded mt-4 items-center | lg:mt-0 lg:gap-2 lg:flex-1">
                     <input title="Input CVE-ID" type="text" className="rounded-md flex-1 p-2 pl-5" placeholder="e.g.: CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:H/A:H" value={vectorString} onChange={(e) => SetVectorString(e.target.value)}/>
                     <button title="Search CVE" className="h-min w-[10vw] p-2 rounded flex justify-center btn" onClick={() => {
-                        convert_cvss()
+                        convert_cvss(vectorString)
                     }}>
                         <MagnifyingGlassIcon className="h-6" />
                     </button>
