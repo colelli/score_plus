@@ -123,3 +123,31 @@ a {
 .collapsible[show=false] {
   height: 0px;
 }
+
+/* Button */
+.btn{
+  color: var(--clr-primary-700) !important;
+  background-color: var(--clr-secondary-400);
+  font-weight: bold;
+
+  &:hover, 
+  &:focus-visible{
+      color: white !important;
+      background-color: var(--clr-secondary-700);
+      border-color: white !important;
+      cursor: pointer;
+  }
+
+  &[datatype=transparent]{
+
+      color: white !important;
+      background-color: transparent;
+
+      &:hover,
+      &:focus-visible{
+          color: var(--clr-secondary-400) !important;
+          border-color: var(--clr-secondary-400) !important;
+          cursor: pointer;
+      }
+  }
+}
