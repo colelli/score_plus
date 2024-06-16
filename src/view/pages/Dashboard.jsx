@@ -292,21 +292,21 @@ function CVETable(props){
                             <>
                                 <tr className="h-[9vh]">
                                     {/*TO-DO: Add data fetch*/}
-                                    <td className={classNames((index != props.result.cveList.length-1)?"border-b":"","border-r border-blue-300 p-2")}>
+                                    <td className="border-t border-r border-blue-300 p-2">
                                         <a href={"https://nvd.nist.gov/vuln/detail/" + cve.id} target="_blank" rel="noopener noreferrer" className="hover:!text-blue-400">{cve.id}</a>
                                     </td>
-                                    <td className={classNames((index != props.result.cveList.length-1)?"border-b":"","border-x border-blue-300 p-2")}>
+                                    <td className="border-t border-x border-blue-300 p-2">
                                         <div className="text-left line-clamp-3" title={cve.desc}>
                                             {cve.desc}
                                         </div>
                                     </td>
-                                    <td className={classNames((index != props.result.cveList.length-1)?"border-b":"","border-x border-blue-300 p-2")}>{cve.baseScore}</td>
-                                    <td className={classNames((index != props.result.cveList.length-1)?"border-b":"","border-x border-blue-300 p-2")}>{cve.impactScore}</td>
-                                    <td className={classNames((index != props.result.cveList.length-1)?"border-b":"","border-x border-blue-300 p-2")}>{cve.severity}</td>
-                                    <td className={classNames((index != props.result.cveList.length-1)?"border-b":"","border-x border-blue-300 p-2 text-4xl")}>
+                                    <td className="border-t border-x border-blue-300 p-2">{cve.baseScore}</td>
+                                    <td className="border-t border-x border-blue-300 p-2">{cve.impactScore}</td>
+                                    <td className="border-t border-x border-blue-300 p-2">{cve.severity}</td>
+                                    <td className="border-t border-x border-blue-300 p-2 text-4xl">
                                         <ExclamationTriangleIcon className={classNames(severityMapping[String(cve.severity).toUpperCase()].fill,"h-5")} />
                                     </td>
-                                    <td className={classNames((index != props.result.cveList.length-1)?"border-b":"","border-l border-blue-300 p-2")}>
+                                    <td className="border-t border-l border-blue-300 p-2">
                                         <input type="checkbox" name='cve' className="w-6 h-6" onChange={(e) => {
                                             props.update_values(e)
                                         }} id={cve.id} disabled={(cve.cwes.length == 0)?true:false}/>
@@ -425,24 +425,24 @@ function CWETable(props){
                         (cwe, index) =>
                             {return Object.keys(cwe).length != 0 &&
                                 <>
-                                    <tr className="h-[6vh]">
-                                        <td className={classNames((index != cweList.length-1)?"border-b":"","border-r border-blue-300 p-2 text-white")}>
+                                    <tr className="h-[9vh]">
+                                        <td className="border-t border-r border-blue-300 p-2 text-white">
                                             <a href={"https://cwe.mitre.org/data/definitions/"+(cwe.id).split('-')[1]+".html"} target="_blank" rel="noopener noreferrer" className="hover:!text-blue-400">{cwe.id}</a>
                                         </td>
-                                        <td className={classNames((index != cweList.length-1)?"border-b":"","border-x border-blue-300 p-2")}>
+                                        <td className="border-t border-x border-blue-300 p-2">
                                             <div className="text-left line-clamp-1" title={cwe.name}>
                                                 {cwe.name}
                                             </div>
                                         </td>
-                                        <td className={classNames((index != cweList.length-1)?"border-b":"","border-x border-blue-300 p-2")}>
-                                            <div className="text-left line-clamp-1" title={cwe.short_description}>
+                                        <td className="border-t border-x border-blue-300 p-2">
+                                            <div className="text-left line-clamp-3" title={cwe.short_description}>
                                                 {cwe.short_description}
                                             </div>
                                         </td>
-                                        <td className={classNames((index != cweList.length-1)?"border-b":"","border-x border-blue-300 p-2")}>
+                                        <td className="border-t border-x border-blue-300 p-2">
                                             <ExclamationTriangleIcon className={classNames((cwe.exploitability == null)?'fill-grey-500':cweExploitabilityMapping[String(cwe.exploitability).toUpperCase()].fill,"h-5")} />
                                         </td>
-                                        <td className={classNames((index != cweList.length-1)?"border-b":"","border-l border-blue-300 p-2")}>
+                                        <td className="border-t border-l border-blue-300 p-2">
                                             <input type="checkbox" name="cwe" className="w-6 h-6" onChange={(e) => {
                                             props.update_values(e)}} id={cwe.id}/>
                                         </td>
