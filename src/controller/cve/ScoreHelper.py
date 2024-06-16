@@ -27,6 +27,8 @@ __severity_score_max = 4.0  # obtained from severity_score_mapping max value
 __impact_based_max_v2 = 10.0  # obtained from: 10.41 x [ 1 - (1 - Confidentiality) x (1 - Integrity) x (1 - Availability) ]
 __impact_based_max_v3 = 6.0  # obtained from: 7.52 × (ISS - 0.029) - 3.25 × (ISS - 0.02)^15 where ISS = 1 - [ (1 - Confidentiality) × (1 - Integrity) × (1 - Availability) ]
 
+__asset_based_max = 10.0 # obtained arbitrarily
+
 
 def calculate_base_org_score(cve_list: List[CVE]) -> float:
     """
@@ -228,7 +230,7 @@ def calculate_org_score_based_on_assets(cve_list: List[CVE]):
             skipped_vulns += 1
             continue
         partial = np.array([(cve.get_cvss_base_score() * db.get_asset_weight(asset_id)) for asset_id in cve.assetIds])
-        data = np.append(data, sum(partial)/len(cve.assetIds))
+        data = np.append(data, sum(__normalize_score(partial, __asset_based_max))/len(cve.assetIds))
 
     score = (sum(data) / (len(cve_list) - skipped_vulns)) if len(cve_list) - skipped_vulns != 0 else 0
     return round(score, 2)
