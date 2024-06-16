@@ -1,16 +1,44 @@
 import { useEffect, useState } from "react"
+import { api_domain } from "../utils/Utils"
 
 export default function Home() {
 
     const logo_path = "/src/view/assets/score_plus_logo.svg"
     const x_icon = "/src/view/assets/x.png"
     const ig_icon = "/src/view/assets/instagram.png"
-    const cve_count = 247747
-    const cwe_count = 1426
 
-    const [c_cve_count, setCveCount] = useState(123774)
-    const [c_cwe_count, setCweCount] = useState(1)
+    const [cve_count, setCveCountMax] = useState(999999)
+    const [cwe_count, setCweCountMax] = useState(999999)
+    const [c_cve_count, setCveCount] = useState(123774) //starting value
+    const [c_cwe_count, setCweCount] = useState(1) //starting value
 
+    //Fetch CWE & CVE counts
+    useEffect(() => {
+        const getCweCount = async () => {
+            try{
+                const response = await fetch(api_domain + "/api/getcwecount")
+                const data = await response.json()
+                setCweCountMax(data.cweCount)
+            }catch(e){
+                console.log(e)
+            }
+        }
+
+        const getCveCount = async () => {
+            try{
+                const response = await fetch(api_domain + "/api/getcvecount")
+                const data = await response.json()
+                setCveCountMax(data.cveCount)
+            }catch(e){
+                console.log(e)
+            }
+        }
+
+        getCweCount();
+        getCveCount();
+    },[])
+
+    //Update CVE counter
     useEffect(() => {
         const timeOutCVE = (increment, ms) => {
             setTimeout(() => {
@@ -27,6 +55,7 @@ export default function Home() {
         }
     },[c_cve_count])
 
+    //Update CWE counter
     useEffect(() => {
         const timeOutCWE = (increment, ms) => {
             setTimeout(() => {

@@ -9,7 +9,7 @@ import controller.HistoryController as hc
 import controller.ConvertController as cc
 import controller.NewResearchController as nc
 import controller.UserProfileController as uc
-import model.Dao as db
+import controller.HomeController as homecontroller
 from controller.utils.ControllerUitls import check_cve, check_cvss, check_cwe
 import logging
 
@@ -143,6 +143,18 @@ def get_assets():
 def update_assets():
     data = request.json['assets']
     return uc._update_assets(data)
+
+
+@__app.route('/api/getcwecount', methods=['GET'])
+@cross_origin()
+def get_cwe_count():
+    return homecontroller._get_cwe_count()
+
+
+@__app.route('/api/getcvecount', methods=['GET'])
+@cross_origin()
+def get_cve_count():
+    return homecontroller._get_cve_count()
 
 
 # App start up

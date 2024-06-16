@@ -36,6 +36,7 @@ def __retrieve_cve_data(cve_json: dict):
     for inner in data:
         if inner == {}:
             data.remove(inner)
+    print(data)
     return {
         'id': cve_data.cve_id,
         'desc': cve_data.descriptions[0]['value'],
@@ -86,4 +87,3 @@ def _update_score(excluded_list: list, mode: int) -> tuple[float, list]:
         case _:
             raise ValueError('Invalid mode selected')
         
-_get_dashboard()
