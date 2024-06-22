@@ -30,13 +30,9 @@ def __get_cwe(cwe_id: str) -> dict:
 def __retrieve_cve_data(cve_json: dict):
     cve_data = CVE(cve_json)
     data = [__retrieve_cwe_data(id[0]) for id in cve_data.get_cwes()]
-    if cve_data.cve_id == 'CVE-2008-1515':
-        print(cve_data.get_cwe_ids())
-
     for inner in data:
         if inner == {}:
             data.remove(inner)
-    print(data)
     return {
         'id': cve_data.cve_id,
         'desc': cve_data.descriptions[0]['value'],

@@ -334,7 +334,7 @@ function CVETable(props){
                                                                         <div className="flex flex-col gap-6">
                                                                                 {Object.entries(mit).map(
                                                                                 (entry) => {
-                                                                                    if(entry[1] != null){
+                                                                                    if(entry[1] != null && entry[1] != ""){
                                                                                         return <InfoBox boxTitle={entry[0]} text={entry[1]} format={true}/>
                                                                                     }
                                                                                 }

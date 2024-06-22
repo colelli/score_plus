@@ -5,6 +5,8 @@ import controller.cve.ScoreHelper as sh
 import controller.SearchController as sc
 import requests
 
+__detective_attacks = "http://10.11.97.30:8080/api/stix_and_vulnerability/get_data/get_related_cves_and_assets_of_cve"
+
 
 def _new_research(cve_id: str) -> dict:
     cve_list = __get_all_relationships(cve_id)
@@ -42,6 +44,7 @@ def __tinify_json(orignal: dict, assets: list) -> dict:
 
 def __get_all_relationships(cve_id: str) -> dict:
     # TO-DO: request to third-party API
+    """
     cve_list = {
         'CVE-2014-3757':['A0008', 'A0012'],
         'CVE-2018-16659':['A0012'],
@@ -59,6 +62,8 @@ def __get_all_relationships(cve_id: str) -> dict:
         'CVE-2017-18158':[],
         'CVE-2010-3685':['A0008', 'A0012']
     }
+    """
+    cve_list = requests.get(f"{__detective_attacks}?id={cve_id}")
     return cve_list
 
 

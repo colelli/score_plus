@@ -42,7 +42,7 @@ export default function NewResearchPopup(props) {
                         <div>Drag & Drop file</div>
                         <div>OR</div>
                         <label for='inputFile' className='btn p-3 rounded-md cursor-pointer'>Select File</label>
-                        <input id='inputFile' type='file' className='hidden'/>
+                        <input id='inputFile' type='file' className='hidden' disabled/>
                     </div>
                     <button title="Search CVE" className="w-[20vw] p-2 rounded flex justify-center btn text-lg | lg:w-[10vw]" onClick={() => {
                         start_research()

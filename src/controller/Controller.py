@@ -109,7 +109,6 @@ def convert_cvss():
 
     for arg in args:
         if arg == 'vector':
-            print(check_cvss(args[arg]))
             return cc._convert_cvss_to_v4(args[arg]) if check_cvss(args[arg]) else abort(400)
     
     abort(400) # No matching function found
