@@ -9,6 +9,7 @@ import { render } from "react-dom"
 export default function Dashboard() {
 
     const [result, SetResult] = useState({})
+    const [resultCWEs, SetResultCWEs] = useState({})
     const [overallScore, SetOverallScore] = useState(0.0)
     const [isLoading, SetIsLoading] = useState(true)
 
@@ -22,13 +23,37 @@ export default function Dashboard() {
             const response = await fetch(api_domain + "/api/getdashboard")
             const data = await response.json()
 
+            //retrieve cwe data
+            var dict = {}
+            for(var i=0; i < data.cveList.length; i++){
+                var icwes = data.cveList[i].cwes
+                for(var j=0; j < icwes.length; j++){
+                    if(!(icwes[j] in dict)){
+                        var d = await retrieve_cwe(icwes[j])
+                        if(d != {}){
+                            dict[icwes[j]] = d
+                        }
+                    }
+                }
+            }
+
             SetResult(data)
-            console.log(data)
+            SetResultCWEs(dict)
             SetOverallScore(data.score.toFixed(1))
         }catch{
             notify_error();
         }
         SetIsLoading(false)
+    }
+
+    const retrieve_cwe = async (cwe) => {
+        try{
+            const response = await fetch(api_domain + "/api/getcwe?cweId="+cwe)
+            const data = await response.json()
+            return data
+        }catch(e){
+            console.log(e)
+        }
     }
 
     const notify_error = () => {
@@ -158,7 +183,7 @@ export default function Dashboard() {
             {/*Loading placeholder*/}
             {isLoading && <ArrowPathIcon className="h-32 w-32 rotate-center text-secondary-400" />}
 
-            {Object.keys(result).length != 0 &&
+            {Object.keys(result).length != 0 && !isLoading &&
                 <>
                     <div className="w-full flex justify-center drop-shadow-[7px_7px_10px_rgba(0,0,0,0.35)] text-secondary-100 font-black text-md | sm:text-6xl">DASHBOARD</div>
                     <div className="w-full flex flex-1 gap-5 flex-col lg:flex-row overflow-hidden">
@@ -225,8 +250,8 @@ export default function Dashboard() {
 
                             {/*Dashboard Table*/}
                             <div className="h-[80vh] max-h-full text-secondary-100 items-start p-1 flex flex-1 rounded-md bg-primary-400 overflow-y-auto overflow-x-hidden | sm:w-full | lg:w-auto">
-                                {isCVETableStyle && <CVETable result={result} update_values={update_values_cve}/>}
-                                {!isCVETableStyle && <CWETable result={result} update_values={update_values_cwe}/>}
+                                {isCVETableStyle && <CVETable result={result} update_values={update_values_cve} resultCWEs={resultCWEs}/>}
+                                {!isCVETableStyle && <CWETable result={result} update_values={update_values_cwe} resultCWEs={resultCWEs}/>}
                             </div>
                         </div>
                 
@@ -323,13 +348,12 @@ function CVETable(props){
                                         <div className='collapsible ease-in-out duration-300 overflow-auto' id={'collapsible-' + cve.id} show='false'>
                                             
                                             {/* Mitigations infoboxes */}
-                                            {console.log(cve.id, cve.cwes)}
-                                            {cve.cwes.length != 0 && cve.cwes.map (
+                                            {cve.cwes.length != 0 && cve.cwes.map(
                                                 (cwe) => 
-                                                    {return cwe!= null && Object.keys(cwe).length != 0 && 
+                                                    {return cwe != null && 
                                                         <div className="w-full h-full pr-2">
-                                                            <div className="text-2xl text-white font-bold pb-6">{cwe.id} - {cwe.name}</div>
-                                                                {cwe.mitigations.map(
+                                                            <div className="text-2xl text-white font-bold pb-6">{props.resultCWEs[cwe].id} - {(props.resultCWEs[cwe]).name}</div>
+                                                                {Object.keys(props.resultCWEs[cwe]).length != 0 && props.resultCWEs[cwe].mitigations.map(
                                                                     (mit) =>
                                                                         <div className="flex flex-col gap-6">
                                                                                 {Object.entries(mit).map(
@@ -387,23 +411,9 @@ function CWETable(props){
     }
 
     const [cweList, SetCWEList] = useState([])
-    const addedCwes = []
     useEffect(() => {
-        let list = []
-        props.result.cveList.map(
-            cve => {
-                if(cve.cwes.length != 0){
-                    cve.cwes.map(
-                        cwe => {
-                            if(!addedCwes.includes(cwe.id)){
-                                list.push(cwe)
-                                addedCwes.push(cwe.id)
-                            }
-                        }
-                    )
-                }
-            }
-        )
+        var list = Object.keys(props.resultCWEs)
+        list = list.filter(val => Object.keys(props.resultCWEs[val]).length != 0)
         SetCWEList(list)
     },[])
 
@@ -427,34 +437,34 @@ function CWETable(props){
                                 <>
                                     <tr className="h-[9vh]">
                                         <td className="border-t border-r border-blue-300 p-2 text-white">
-                                            <a href={"https://cwe.mitre.org/data/definitions/"+(cwe.id).split('-')[1]+".html"} target="_blank" rel="noopener noreferrer" className="hover:!text-blue-400">{cwe.id}</a>
+                                            <a href={"https://cwe.mitre.org/data/definitions/"+(props.resultCWEs[cwe].id).split('-')[1]+".html"} target="_blank" rel="noopener noreferrer" className="hover:!text-blue-400">{props.resultCWEs[cwe].id}</a>
                                         </td>
                                         <td className="border-t border-x border-blue-300 p-2">
-                                            <div className="text-left line-clamp-1" title={cwe.name}>
-                                                {cwe.name}
+                                            <div className="text-left line-clamp-1" title={props.resultCWEs[cwe].name}>
+                                                {props.resultCWEs[cwe].name}
                                             </div>
                                         </td>
                                         <td className="border-t border-x border-blue-300 p-2">
-                                            <div className="text-left line-clamp-3" title={cwe.short_description}>
-                                                {cwe.short_description}
+                                            <div className="text-left line-clamp-3" title={props.resultCWEs[cwe].short_description}>
+                                                {props.resultCWEs[cwe].short_description}
                                             </div>
                                         </td>
                                         <td className="border-t border-x border-blue-300 p-2">
-                                            <ExclamationTriangleIcon className={classNames((cwe.exploitability == null)?'fill-grey-500':cweExploitabilityMapping[String(cwe.exploitability).toUpperCase()].fill,"h-5")} />
+                                            <ExclamationTriangleIcon className={classNames((props.resultCWEs[cwe].exploitability == null)?'fill-grey-500':cweExploitabilityMapping[String(props.resultCWEs[cwe].exploitability).toUpperCase()].fill,"h-5")} />
                                         </td>
                                         <td className="border-t border-l border-blue-300 p-2">
                                             <input type="checkbox" name="cwe" className="w-6 h-6" onChange={(e) => {
-                                            props.update_values(e)}} id={cwe.id}/>
+                                            props.update_values(e)}} id={props.resultCWEs[cwe].id}/>
                                         </td>
                                     </tr>
                                     <div className="h-min w-[73.7vw] bg-primary-500 text-left text-gray-400 pt-2 px-2 mb-2 | lg:w-[61.7vw]">
-                                        <div className="flex flex-row items-center pb-2 | hover:cursor-pointer" id={cwe.id} onClick={(e) => {
+                                        <div className="flex flex-row items-center pb-2 | hover:cursor-pointer" id={props.resultCWEs[cwe].id} onClick={(e) => {
                                             toggleCollapsible(e.currentTarget.id)
                                         }}>
                                             <div className="flex-1 font-bold">Vulnerabilities</div>
                                             <PlusIcon className="h-5"/>
                                         </div>
-                                        <div className='collapsible ease-in-out duration-300 overflow-auto' id={'collapsible-' + cwe.id} show='false'>
+                                        <div className='collapsible ease-in-out duration-300 overflow-auto' id={'collapsible-' + props.resultCWEs[cwe].id} show='false'>
                                             
                                             {/* Vulnerabilities infoboxes */}
                                             {props.result.cveList.map(

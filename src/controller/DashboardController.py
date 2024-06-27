@@ -22,16 +22,18 @@ def _get_dashboard() -> dict:
     return out
 
 
-def __get_cwe(cwe_id: str) -> dict:
-    result = requests.get(f"{cvwelibapi}get_cwe?cweId={cwe_id}")
-    return json.loads(result.content)
+def _get_cwe(cwe_id: str) -> dict:
+    if cwe_id not in __invalid_cwe_ids:
+        result = requests.get(f"{cvwelibapi}get_cwe?cweId={cwe_id}")
+        return json.loads(result.content)
+    return {}
 
 
 def __retrieve_cve_data(cve_json: dict):
     cve_data = CVE(cve_json)
-    data = [__retrieve_cwe_data(id[0]) for id in cve_data.get_cwes()]
+    data = [id[0] for id in cve_data.get_cwes()]
     for inner in data:
-        if inner == {}:
+        if inner in __invalid_cwe_ids:
             data.remove(inner)
     return {
         'id': cve_data.cve_id,
@@ -41,12 +43,6 @@ def __retrieve_cve_data(cve_json: dict):
         'severity': cve_data.get_cvss_severity(),
         'cwes': data
     }
-
-
-def __retrieve_cwe_data(cwe_id: str) -> dict:
-    if cwe_id not in __invalid_cwe_ids:
-        return __get_cwe(cwe_id)
-    return {}
 
 
 def _update_score(excluded_list: list, mode: int) -> tuple[float, list]:

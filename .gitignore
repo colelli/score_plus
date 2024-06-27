@@ -30,7 +30,7 @@ dist-ssr
 
 #dirs
 creds/
-files/
+src/model/files/HISTORY.json
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
