@@ -1,6 +1,7 @@
 import sys
 sys.path.append('src')
 from controller.cve.CVEHelper import CVE
+from controller.utils.ControllerUitls import check_cwe
 import controller.cve.ScoreHelper as sh
 import controller.SearchController as sc
 import requests
@@ -81,11 +82,14 @@ def __get_severity_counts(cve_list: list[CVE]) -> dict:
 
 
 def __get_weakness_counts(cve_list: list[CVE]) -> dict:
+    added_cwes = []
     out = {
         'Primary': 0,
         'Secondary': 0
     }
     for cve in cve_list:
         for cwe in cve.get_cwes():
-            out[cwe[1]] += 1
+            if cwe[0] not in added_cwes and check_cwe(cwe[0]):
+                out[cwe[1]] += 1
+                added_cwes.append(cwe[0])
     return out

@@ -4,12 +4,9 @@ import model.Dao as db
 import controller.cve.ScoreHelper as sh
 import controller.SearchController as sc
 from controller.cve.CVEHelper import CVE
-from controller.utils.ControllerUitls import cvwelibapi
+from controller.utils.ControllerUitls import cvwelibapi, check_cwe
 import requests
 import json
-
-
-__invalid_cwe_ids = ['NVD-CWE-noinfo', 'NVD-CWE-Other']
 
 
 def _get_dashboard() -> dict:
@@ -23,7 +20,7 @@ def _get_dashboard() -> dict:
 
 
 def _get_cwe(cwe_id: str) -> dict:
-    if cwe_id not in __invalid_cwe_ids:
+    if check_cwe(cwe_id):
         result = requests.get(f"{cvwelibapi}get_cwe?cweId={cwe_id}")
         return json.loads(result.content)
     return {}
@@ -33,7 +30,7 @@ def __retrieve_cve_data(cve_json: dict):
     cve_data = CVE(cve_json)
     data = [id[0] for id in cve_data.get_cwes()]
     for inner in data:
-        if inner in __invalid_cwe_ids:
+        if not check_cwe(inner):
             data.remove(inner)
     return {
         'id': cve_data.cve_id,

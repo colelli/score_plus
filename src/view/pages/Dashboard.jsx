@@ -91,7 +91,7 @@ export default function Dashboard() {
                     //cycle through all cves
                     if(cve.id == e.target.id && checkedIds.every(val => val != e.target.id)){
                         cve.cwes.forEach(cwe => {
-                            ignoreMe.push(cwe.id)
+                            ignoreMe.push(cwe)
                         })
                     }
                 })
@@ -102,8 +102,8 @@ export default function Dashboard() {
                 //cycle through all cves
                 if(cve.id == box.id){
                     cve.cwes.forEach(cwe => {
-                        if(!ignoreMe.includes(cwe.id)){
-                            solvedCWEs.push(cwe.id)
+                        if(!ignoreMe.includes(cwe)){
+                            solvedCWEs.push(cwe)
                         }
                     })
                 }
@@ -116,7 +116,7 @@ export default function Dashboard() {
             checkbox.checked = false;
             result.cveList.forEach(cve => {
                 if(cve.id == checkbox.id){
-                    if(cve.cwes.every(val => solvedCWEs.includes(val.id))){
+                    if(cve.cwes.every(val => solvedCWEs.includes(val))){
                         checkbox.checked = true;
                         values.push(checkbox.id);
                     }else{
@@ -139,14 +139,13 @@ export default function Dashboard() {
 
         values = []
         result.cveList.forEach(cve => {
-            if(cve.cwes.every(val => solvedCWEs.includes(val.id)) && cve.cwes.length != 0){
+            if(cve.cwes.every(cwe => solvedCWEs.includes(cwe)) && cve.cwes.length != 0){
                 values.push(cve.id);
             }else{
                 values.filter(val => val != cve.id);
             }
         })
 
-        console.log(values);
         update_values();
 
     }
